@@ -11,6 +11,14 @@ The curriculum is not included in the app until an API token is given.
 
 ---
 
+API can be added as a new file 'src/api_token.ts'
+
+```javascript
+export default '<API TOKEN HERE>';
+```
+
+---
+
 The app will feature a quiz function that lets users revise sets of radicals, kanji or vocabulary.
 <!-- Later plans are:
  - A custom study mode.
