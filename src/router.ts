@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '@/views/Home.vue';
+import { RHome } from '@/views/Radical';
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', component: Home }
+  { path: '/', component: Home },
+
+  { path: '/radical', component: RHome }
 ];
 
 const router = createRouter({
