@@ -1,0 +1,78 @@
+:root {
+  --c-background-color: #121212;
+  --c-text-color: #ffffff;
+  --c-text-fade-color: #a3a3a3;
+  --c-border-color: #282828;
+  --c-card-background: #1e1e1e;
+  --c-header-background: #1f1f1f;
+  --c-color-hover: #171717;
+
+  --c-color-step-50: #1e1e1e;
+  --c-color-step-100: #2a2a2a;
+  --c-color-step-150: #363636;
+  --c-color-step-200: #414141;
+  --c-color-step-250: #4d4d4d;
+  --c-color-step-300: #595959;
+  --c-color-step-350: #656565;
+  --c-color-step-400: #717171;
+  --c-color-step-450: #7d7d7d;
+  --c-color-step-500: #898989;
+  --c-color-step-550: #949494;
+  --c-color-step-600: #a0a0a0;
+  --c-color-step-650: #acacac;
+  --c-color-step-700: #b8b8b8;
+  --c-color-step-750: #c4c4c4;
+  --c-color-step-800: #d0d0d0;
+  --c-color-step-850: #dbdbdb;
+  --c-color-step-900: #e7e7e7;
+  --c-color-step-950: #f3f3f3;
+
+  --c-color-radical: #0e94d8;
+  --c-color-kanji: #c41389;
+  --c-color-vocab: #970fdb;
+  --c-color-good: #24d039;
+  --c-color-bad: #ff2642;
+  --c-color-light: #f4f5f8;
+  --c-color-medium: #989aa2;
+  --c-color-dark: #222428;
+
+  user-select: none;
+}
+
+:lang(ja) {
+  font-family: "Hiragino Kaku Gothic Pro", "Meiryo", "Source Han Sans Japanese",
+    "NotoSansCJK", "TakaoPGothic", "Yu Gothic", "ヒラギノ角ゴ Pro W3",
+    "メイリオ", "Osaka", "MS PGothic", "ＭＳ Ｐゴシック", "Noto Sans JP",
+    sans-serif;
+}
+
+#app {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #000;
+  color: var(--c-text-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  font-size: 2vh;
+}
+
+#app.original-colors {
+  --c-color-radical: #0093dd;
+  --c-color-kanji: #ce0f8e;
+  --c-color-vocab: #aa38c6;
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(255,255,255,0.05);
+}
+
+@media (orientation: landscape) {
+  #app {
+    width: 100vh;
+    height: 100vw;
+    font-size: 2vw;
+    transform: translate(-50vh, -50vw) rotate(-90deg) translate(-50vh, 50vw);
+  }
+}
