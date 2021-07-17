@@ -59,8 +59,8 @@ const inflate = (buffer: string): Promise<string> =>
           .split('')
           .map(c => c.charCodeAt(0))
       ),
-      (e, b) => {
-        e ? reject(e) : resolve(b);
+      (e, b: Buffer) => {
+        e ? reject(e) : resolve(b.toString('utf-8'));
       }
     )
   );
