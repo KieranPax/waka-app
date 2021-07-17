@@ -1,0 +1,8 @@
+{
+  "name": "components",
+  "main": "index.ts",
+  "files": [
+    "./index.ts",
+    "./*.vue"
+  ]
+}
