@@ -26,6 +26,6 @@ div.card-main {
 }
 
 .card-body {
-  padding: var(--override-card-padding, 10px);
+  padding: var(--override-card-padding, 1rem);
 }
 </style>

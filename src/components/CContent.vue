@@ -29,7 +29,7 @@ div.content-box {
 
 div.content-flex {
   position: absolute;
-  padding: 10px;
+  padding: 0.5rem;
   left: 0;
   right: 0;
   top: 0;
