@@ -1,5 +1,5 @@
 <template>
-  <c-card class="k-details">
+  <c-card @click.stop="" class="k-details">
     <div class="details-head">
       <k-image v-bind="{ kanji }" class="kanji-char" /><br>
       <span class="kanji-name">{{ kanji ? kanji.name : '' }}</span>

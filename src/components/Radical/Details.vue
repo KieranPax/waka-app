@@ -1,5 +1,5 @@
 <template>
-  <c-card class="r-details">
+  <c-card @click.stop="" class="r-details">
     <div class="details-head">
       <r-image v-bind="{ radical }" class="radical-char" /><br>
       <span class="radical-name">{{ radical ? radical.name : '' }}</span>
