@@ -1,5 +1,5 @@
 <template>
-  <header class="header-holder">
+  <header class="header-holder c-header">
     <span class="header-content">
       <c-icon
         v-if="icon"
@@ -51,7 +51,7 @@ export default defineComponent({
 }
 
 .header-icon {
-  --icon-color: var(--c-color-radical);
+  --icon-color: var(--header-icon-color,var(--c-color-medium));
   --icon-scale: 1.4;
 }
 

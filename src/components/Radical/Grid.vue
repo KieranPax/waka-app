@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table class="r-grid">
     <tr v-for="row in rows" :key="row.i">
       <td v-for="r in row.r" :key="r.id">
         <c-card @click="()=>$emit('selectedRadical', r)">

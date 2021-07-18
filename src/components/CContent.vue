@@ -1,5 +1,5 @@
 <template>
-  <div class="content-box">
+  <div class="content-box c-content">
     <div class="content-flex">
       <slot />
     </div>
@@ -21,7 +21,7 @@ div.content-box {
   position: absolute;
   left: 0;
   right: 0;
-  top: 3.6em;
+  top: 3.3em;
   bottom: 0;
   overflow-x: hidden;
   overflow-y: scroll;

@@ -55,6 +55,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.c-header {
+  --header-icon-color: var(--c-color-radical);
+}
+
 .screen-cover {
   position: absolute;
   left: 0;

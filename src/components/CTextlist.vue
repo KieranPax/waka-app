@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="c-textlist">
     <router-link
       class="list-item"
       v-for="i in lines"

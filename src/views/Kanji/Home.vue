@@ -32,4 +32,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.c-header {
+  --header-icon-color: var(--c-color-kanji);
+}
+</style>

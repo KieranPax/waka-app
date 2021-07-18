@@ -1,5 +1,5 @@
 <template>
-  <div class="view-holder">
+  <div class="view-holder c-view">
     <slot>
       Insert HTML DOM into view component
     </slot>

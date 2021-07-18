@@ -1,5 +1,5 @@
 <template>
-  <c-card class="main-card">
+  <c-card class="r-details">
     <div class="details-head">
       <r-image v-bind="{ radical }" class="radical-char" /><br>
       <span class="radical-name">{{ radical ? radical.name : '' }}</span>
@@ -45,7 +45,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.main-card {
+c-card {
   width: 15em;
   --override-card-background: var(--c-color-radical);
   --override-card-padding: 4px;
