@@ -272,7 +272,6 @@ class RadicalStore implements RadicalStoreOutline {
   constructor (generate?: Radical[]) {
     if (generate) {
       this.readyPromise = (async () => {
-        const t = performance.now();
         const s0: [number, number][] = [];
         const s1 = [];
         for (const i of generate) {
@@ -291,7 +290,6 @@ class RadicalStore implements RadicalStoreOutline {
             await deflate(JSON.stringify(s1.splice(0)))
           ]);
         }
-        console.log(performance.now() - t);
         this.ready = true;
         this.save();
       })();
@@ -429,7 +427,6 @@ class KanjiStore implements KanjiStoreOutline {
   constructor (generate?: Kanji[]) {
     if (generate) {
       this.readyPromise = (async () => {
-        const t = performance.now();
         const s0: [number, number][] = [];
         const s1 = [];
         for (const i of generate) {
@@ -448,7 +445,6 @@ class KanjiStore implements KanjiStoreOutline {
             await deflate(JSON.stringify(s1.splice(0)))
           ]);
         }
-        console.log(performance.now() - t);
         this.ready = true;
         this.save();
       })();
@@ -492,7 +488,6 @@ class KanjiStore implements KanjiStoreOutline {
         if (fetch.includes(b[1])) indices.push(a);
       }
       if (indices.length) {
-        console.log(part);
         let data = this.exStore.get(part);
         if (!data) {
           data = JSON.parse(await inflate(cData)) as Kanji[];
@@ -587,7 +582,6 @@ class VocabStore implements VocabStoreOutline {
   constructor (generate?: Vocab[]) {
     if (generate) {
       this.readyPromise = (async () => {
-        const t = performance.now();
         const s0: [number, number][] = [];
         const s1 = [];
         for (const i of generate) {
@@ -606,7 +600,6 @@ class VocabStore implements VocabStoreOutline {
             await deflate(JSON.stringify(s1.splice(0)))
           ]);
         }
-        console.log(performance.now() - t);
         this.ready = true;
         this.save();
       })();
