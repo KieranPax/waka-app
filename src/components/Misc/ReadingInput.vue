@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, h, RendererNode } from 'vue';
+import { defineComponent, h } from 'vue';
 import { bind as WKBind } from 'wanakana';
 
 export default defineComponent({
+  name: 'KanaInput',
   render () {
     const o = h('kana-inp', [h('input')]);
     setTimeout(() => {

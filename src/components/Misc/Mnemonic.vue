@@ -5,7 +5,7 @@ export default defineComponent({
   name: 'Mnemonic',
   props: { m: { type: String, default: '' } },
   render () {
-    const l = this.m.split(/\<([^\>]*)\>/g).filter(s => !s.startsWith('/'));
+    const l = this.m.split(/<([^>]*)>/g).filter(s => !s.startsWith('/'));
     const c = [];
     for (let i = 0; i < l.length;) {
       c.push(l[i++]);

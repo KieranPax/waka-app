@@ -15,7 +15,7 @@ import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CTextlist } from '@/components';
 
 export default defineComponent({
-  name: 'Home',
+  name: 'RHome',
   components: { CView, CHeader, CContent, CTextlist },
   data () {
     const router = useRouter();

@@ -14,7 +14,7 @@ import { defineComponent, h } from 'vue';
 import CIcon from '../CIcon.vue';
 
 export default defineComponent({
-  name: 'RadicalImage',
+  name: 'RImage',
   components: { CIcon },
   props: {
     radical: {
