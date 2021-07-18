@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '@/views/Home.vue';
 import { RHome, RLevel } from '@/views/Radical';
-import { KHome } from '@/views/Kanji';
+import { KHome, KLevel } from '@/views/Kanji';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: Home },
@@ -10,6 +10,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/radical/l/:levelId', component: RLevel },
 
   { path: '/kanji', component: KHome },
+  { path: '/kanji/l/:levelId', component: KLevel }
 ];
 
 const router = createRouter({

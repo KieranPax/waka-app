@@ -1,2 +1,3 @@
 import KHome from './Home.vue';
-export { KHome };
+import KLevel from './Level.vue';
+export { KHome, KLevel };
