@@ -34,7 +34,7 @@ export default defineComponent({
   text-align: left;
   transition: background 0.4s;
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 0.9em;
   text-decoration: none;
 }
 
