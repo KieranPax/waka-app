@@ -12,12 +12,12 @@
     <div
       class="screen-cover"
       :style="{
-        opacity: radicalDetails ? 1 : 0,
-        'pointer-events': radicalDetails ? 'all' : 'none'
+        opacity: radicalDetails.a ? 1 : 0,
+        'pointer-events': radicalDetails.a ? 'all' : 'none'
       }"
       @click="() => updateRadicalDetails()"
     >
-      <r-details class="details-card" v-bind="{ radical: radicalDetails }" />
+      <r-details class="details-card" v-bind="{ radical: radicalDetails.b }" />
     </div>
   </c-view>
 </template>
@@ -39,7 +39,10 @@ export default defineComponent({
     const route = useRoute();
     const levelId = Number(route.params.levelId);
     const level: Ref<Radical[]> = ref([]);
-    const radicalDetails: Ref<Radical | undefined> = ref(undefined);
+    const radicalDetails: Ref<{ a: boolean; b: Radical | undefined }> = ref({
+      a: false,
+      b: undefined
+    });
     GetRadicalStore().then(async store => {
       level.value = await store.byLevel([levelId]);
       console.log(level.value);
@@ -48,7 +51,8 @@ export default defineComponent({
   },
   methods: {
     updateRadicalDetails (r?: Radical) {
-      this.radicalDetails = r;
+      if(r) this.radicalDetails = {a:true,b:r};
+      else this.radicalDetails.a = false;
     }
   }
 });
@@ -66,6 +70,7 @@ export default defineComponent({
   top: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
+  transition: opacity 0.4s;
 }
 
 .details-card {
