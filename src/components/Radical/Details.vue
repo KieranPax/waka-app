@@ -11,8 +11,8 @@
         }}
       </ul>
     </div>
-    <div class="extra-holder">
-      {{ radical ? radical.mM : '' }}
+    <div v-if="radical" class="extra-holder">
+      <mnemonic :m="radical.mM" />
     </div>
   </c-card>
 </template>
@@ -22,10 +22,11 @@ import { Radical } from '@/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import RImage from './Image.vue';
+import Mnemonic from '../Misc/Mnemonic.vue';
 
 export default defineComponent({
   name: 'RadicalImage',
-  components: { CCard, RImage },
+  components: { CCard, RImage, Mnemonic },
   props: {
     radical: {
       type: Object,
@@ -45,7 +46,7 @@ export default defineComponent({
 
 <style scoped>
 .main-card {
-  width: 10em;
+  width: 15em;
   --override-card-background: var(--c-color-radical);
   --override-card-padding: 4px;
 }
@@ -66,11 +67,12 @@ export default defineComponent({
 }
 
 .extra-holder {
-  background: var(--c-color-step-100);
+  background: var(--c-card-background);
   font-size: 0.6em;
   border-radius: 4px;
   padding: 5px;
   margin-top: 0.5rem;
+  line-height: 1.5;
 }
 
 ul {

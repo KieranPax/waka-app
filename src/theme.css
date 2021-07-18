@@ -36,6 +36,12 @@
   --c-color-medium: #989aa2;
   --c-color-dark: #222428;
 
+  --c-tint-radical: #085881;
+  --c-tint-kanji: #750b52;
+  --c-tint-vocab: #5a0983;
+  --c-tint-good: #157c22;
+  --c-tint-bad: #991627;
+
   user-select: none;
 
   font-size: 2vh;

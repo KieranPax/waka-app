@@ -41,7 +41,7 @@ export default defineComponent({
         {
           title: 'Radicals',
           desc: 'Test your Radical naming skills here',
-          color: 'medium',
+          color: 'radical',
           icon: '部首',
           func: () => router.push('radical')
         },
