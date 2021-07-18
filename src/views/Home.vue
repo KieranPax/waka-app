@@ -48,7 +48,7 @@ export default defineComponent({
         {
           title: 'Kanji',
           desc: 'Test your Kanji knowledge here',
-          color: 'medium',
+          color: 'kanji',
           icon: '漢字',
           func: () => router.push('kanji')
         },
