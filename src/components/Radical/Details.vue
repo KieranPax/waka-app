@@ -25,7 +25,7 @@ import RImage from './Image.vue';
 import Mnemonic from '../Misc/Mnemonic.vue';
 
 export default defineComponent({
-  name: 'RImage',
+  name: 'RDetails',
   components: { CCard, RImage, Mnemonic },
   props: {
     radical: {

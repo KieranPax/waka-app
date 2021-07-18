@@ -4,7 +4,7 @@ import { defineComponent, h } from 'vue';
 const iconCache = new Map();
 
 export default defineComponent({
-  name: 'CHeader',
+  name: 'CIcon',
   props: {
     name: { type: String, required: true }
   },
@@ -40,7 +40,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-c-icon >>> svg {
+c-icon:deep() svg {
   color: var(--icon-color, var(--c-text-color, #f0f));
   height: calc(1em * var(--icon-scale, 1));
   position: relative;

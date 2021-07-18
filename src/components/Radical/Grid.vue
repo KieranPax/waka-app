@@ -17,7 +17,7 @@ import CCard from '../CCard.vue';
 import RImage from './Image.vue';
 
 export default defineComponent({
-  name: 'RImage',
+  name: 'RGrid',
   components: { CCard, RImage },
   props: {
     radicals: {
