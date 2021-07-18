@@ -10,30 +10,26 @@ export default defineComponent({
   },
   created () {
     (async () => {
-      if (iconCache.has(this.name)) {
-        setTimeout(() => {
-          this.$el.innerHTML = iconCache.get(this.name);
-        }, 50);
-      } else {
-        let f = '';
+      let f = '';
 
-        if (this.name.startsWith(':')) {
-          f = await (
-            await fetch('/icons/' + this.name.substring(1) + '.svg')
-          ).text();
-          if (!f.startsWith('<svg')) f = '';
-        } else if (this.name.startsWith('@')) {
-          f = await (await fetch(this.name.substring(1))).text();
-        }
-
-        if (f) {
-          this.$el.innerHTML = f;
-          iconCache.set(this.name, f);
-        } else console.error('invalid icon name:', this.name);
+      if (this.name.startsWith(':')) {
+        f = await (
+          await fetch('/icons/' + this.name.substring(1) + '.svg')
+        ).text();
+        if (!f.startsWith('<svg')) f = '';
+      } else if (this.name.startsWith('@')) {
+        f = await (await fetch(this.name.substring(1))).text();
       }
+
+      if (f) {
+        this.$el.innerHTML = f;
+        iconCache.set(this.name, f);
+      } else console.error('invalid icon name:', this.name);
     })();
   },
   render () {
+    if (iconCache.has(this.name))
+      return h('c-icon', { domProps: { innerHTML: iconCache.get(this.name) } });
     return h('c-icon');
   }
 });
