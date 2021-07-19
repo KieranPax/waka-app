@@ -94,7 +94,7 @@ async function FetchOnlineWKRadicals (): Promise<WaniKaniImportRadical[]> {
 
     const j: WaniKaniFetch<WaniKaniImportRadical> = await res.json();
     url = j.pages.next_url;
-    l.push(j.data as WaniKaniImportRadical[]);
+    l.push(j.data);
 
     if (url) await delay;
   }
@@ -117,7 +117,7 @@ async function FetchOnlineWKKanji (): Promise<WaniKaniImportKanji[]> {
 
     const j: WaniKaniFetch<WaniKaniImportKanji> = await res.json();
     url = j.pages.next_url;
-    l.push(j.data as WaniKaniImportKanji[]);
+    l.push(j.data);
 
     if (url) await delay;
   }
@@ -140,7 +140,7 @@ async function FetchOnlineWKVocab (): Promise<WaniKaniImportVocab[]> {
 
     const j: WaniKaniFetch<WaniKaniImportVocab> = await res.json();
     url = j.pages.next_url;
-    l.push(j.data as WaniKaniImportVocab[]);
+    l.push(j.data);
 
     if (url) await delay;
   }
