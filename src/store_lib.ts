@@ -4,7 +4,7 @@ import {
   WaniKaniImportRadical,
   WaniKaniImportKanji,
   WaniKaniImportVocab,
-  WaniKaniSubjectFetch
+  WaniKaniFetch
 } from '@/wk_types';
 import {
   ConvRadical,
@@ -92,7 +92,7 @@ async function FetchOnlineWKRadicals (): Promise<WaniKaniImportRadical[]> {
       throw Error('STATUS CODE ' + res.status + ' -> ' + res.statusText);
     }
 
-    const j: WaniKaniSubjectFetch = await res.json();
+    const j: WaniKaniFetch<WaniKaniImportRadical> = await res.json();
     url = j.pages.next_url;
     l.push(j.data as WaniKaniImportRadical[]);
 
@@ -115,7 +115,7 @@ async function FetchOnlineWKKanji (): Promise<WaniKaniImportKanji[]> {
       throw Error('STATUS CODE ' + res.status + ' -> ' + res.statusText);
     }
 
-    const j: WaniKaniSubjectFetch = await res.json();
+    const j: WaniKaniFetch<WaniKaniImportKanji> = await res.json();
     url = j.pages.next_url;
     l.push(j.data as WaniKaniImportKanji[]);
 
@@ -138,7 +138,7 @@ async function FetchOnlineWKVocab (): Promise<WaniKaniImportVocab[]> {
       throw Error('STATUS CODE ' + res.status + ' -> ' + res.statusText);
     }
 
-    const j: WaniKaniSubjectFetch = await res.json();
+    const j: WaniKaniFetch<WaniKaniImportVocab> = await res.json();
     url = j.pages.next_url;
     l.push(j.data as WaniKaniImportVocab[]);
 

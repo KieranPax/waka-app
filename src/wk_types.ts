@@ -114,7 +114,7 @@ export type WaniKaniImportAny = WaniKaniImport<
   WaniKaniRadical | WaniKaniKanji | WaniKaniVocab
 >;
 
-export interface WaniKaniSubjectFetch {
+export interface WaniKaniFetch<T> {
   url: string;
   object: string;
   total_count: number;
@@ -124,5 +124,5 @@ export interface WaniKaniSubjectFetch {
     per_page: number;
   };
   data_updated_at: string;
-  data: WaniKaniImportAny[];
+  data: T[];
 }
