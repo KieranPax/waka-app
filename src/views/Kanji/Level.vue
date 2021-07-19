@@ -17,13 +17,13 @@
       }"
       @click="() => updateKanjiDetails()"
     >
-      <k-details class="details-card" v-bind="{ kanji: kanjiDetails.b }" />
+      <k-details class="details-card" v-bind="{ kanji: kanjiDetails.b }" ref="detailsEl" />
     </div>
   </c-view>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
+import { Component, defineComponent, ref, Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import KGrid from '@/components/Kanji/Grid.vue';
@@ -45,7 +45,6 @@ export default defineComponent({
     });
     GetKanjiStore().then(async store => {
       level.value = await store.byLevel([levelId]);
-      console.log(level.value);
     });
     return { router, levelId, level, kanjiDetails };
   },
@@ -53,6 +52,7 @@ export default defineComponent({
     updateKanjiDetails (k?: Kanji) {
       if(k) this.kanjiDetails = {a:true,b:k};
       else this.kanjiDetails.a = false;
+      (this.$refs.detailsEl as typeof KDetails).updateKanji();
     }
   }
 });

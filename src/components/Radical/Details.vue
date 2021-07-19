@@ -5,7 +5,7 @@
       <span class="radical-name">{{ radical ? radical.name : '' }}</span>
     </div>
     <div v-if="altMeanings.length" class="extra-holder">
-      <ul v-for="m in altMeanings" :key="m">
+      <ul v-for="m in altMeanings" :key="m" class="alt-meaning">
         {{
           m
         }}
@@ -37,7 +37,7 @@ export default defineComponent({
     altMeanings (): string[] {
       if (!this.radical) return [];
       return (this.radical as Radical).m
-        .filter(i => !(i[1] & 1) && i[1] & 2)
+        .filter(i => i[1] === 6)
         .map(i => i[0]);
     }
   }
@@ -75,8 +75,9 @@ c-card {
   line-height: 1.5;
 }
 
-ul {
+.alt-meaning {
   margin: 0;
   padding: 5px;
+  color: var(--c-color-step-700);
 }
 </style>

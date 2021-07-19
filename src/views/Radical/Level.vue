@@ -45,7 +45,6 @@ export default defineComponent({
     });
     GetRadicalStore().then(async store => {
       level.value = await store.byLevel([levelId]);
-      console.log(level.value);
     });
     return { router, levelId, level, radicalDetails };
   },
