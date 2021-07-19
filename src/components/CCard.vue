@@ -36,7 +36,8 @@ c-card {
   background: var(--override-card-background, var(--c-card-background));
   border: 1px solid var(--c-border-color);
   border-radius: 4px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .card-body {

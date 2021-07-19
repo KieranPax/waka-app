@@ -117,7 +117,6 @@ c-card {
   width: 15em;
   --override-card-background: var(--c-color-kanji);
   --override-card-padding: 4px;
-  overflow-y: scroll;
   max-height: 60vh;
 }
 
