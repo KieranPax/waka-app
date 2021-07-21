@@ -17,19 +17,22 @@
       }"
       @click="() => updateKanjiDetails()"
     >
-      <k-details class="details-card" v-bind="{ kanji: kanjiDetails.b }" ref="detailsEl" />
+      <k-details
+        class="details-card" v-bind="{ kanji: kanjiDetails.b }"
+        ref="detailsEl"
+      />
     </div>
   </c-view>
 </template>
 
 <script lang="ts">
-import { Component, defineComponent, ref, Ref } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import KGrid from '@/components/Kanji/Grid.vue';
 import KDetails from '@/components/Kanji/Details.vue';
-import { GetKanjiStore } from '@/store_lib';
-import { Kanji } from '@/ja_types';
+import { GetKanjiStore } from '@/oldLib/store_lib';
+import { Kanji } from '@/oldLib/ja_types';
 
 export default defineComponent({
   name: 'KLevel',
@@ -50,7 +53,7 @@ export default defineComponent({
   },
   methods: {
     updateKanjiDetails (k?: Kanji) {
-      if(k) this.kanjiDetails = {a:true,b:k};
+      if (k) this.kanjiDetails = { a: true, b: k };
       else this.kanjiDetails.a = false;
       (this.$refs.detailsEl as typeof KDetails).updateKanji();
     }

@@ -28,8 +28,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import RGrid from '@/components/Radical/Grid.vue';
 import RDetails from '@/components/Radical/Details.vue';
-import { GetRadicalStore } from '@/store_lib';
-import { Radical } from '@/ja_types';
+import { GetRadicalStore } from '@/oldLib/store_lib';
+import { Radical } from '@/oldLib/ja_types';
 
 export default defineComponent({
   name: 'RLevel',
@@ -50,7 +50,7 @@ export default defineComponent({
   },
   methods: {
     updateRadicalDetails (r?: Radical) {
-      if(r) this.radicalDetails = {a:true,b:r};
+      if (r) this.radicalDetails = { a: true, b: r };
       else this.radicalDetails.a = false;
     }
   }

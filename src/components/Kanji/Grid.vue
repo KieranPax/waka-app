@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Kanji } from '@/ja_types';
+import { Kanji } from '@/oldLib/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import KImage from './Image.vue';

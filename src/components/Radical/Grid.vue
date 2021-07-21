@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Radical } from '@/ja_types';
+import { Radical } from '@/oldLib/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import RImage from './Image.vue';

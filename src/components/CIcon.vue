@@ -28,8 +28,7 @@ export default defineComponent({
     })();
   },
   render () {
-    if (iconCache.has(this.name))
-      return h('c-icon', { domProps: { innerHTML: iconCache.get(this.name) } });
+    if (iconCache.has(this.name)) { return h('c-icon', { domProps: { innerHTML: iconCache.get(this.name) } }) }
     return h('c-icon');
   }
 });

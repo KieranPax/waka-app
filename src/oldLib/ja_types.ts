@@ -6,7 +6,7 @@ import {
   WaniKaniImportKanji,
   WaniKaniImportVocab,
   WaniKaniPronunciationAudio
-} from '@/wk_types';
+} from './wk_types';
 
 /* types */
 

@@ -5,7 +5,10 @@
       <span class="radical-name">{{ radical ? radical.name : '' }}</span>
     </div>
     <div v-if="altMeanings.length" class="extra-holder">
-      <ul v-for="m in altMeanings" :key="m" class="alt-meaning">
+      <ul
+        v-for="m in altMeanings" :key="m"
+        class="alt-meaning"
+      >
         {{
           m
         }}
@@ -18,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Radical } from '@/ja_types';
+import { Radical } from '@/oldLib/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import RImage from './Image.vue';

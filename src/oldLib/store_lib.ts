@@ -1,11 +1,11 @@
 import zlib from 'zlib';
-import token from '@/api_token';
+import token from './api_token';
 import {
   WaniKaniImportRadical,
   WaniKaniImportKanji,
   WaniKaniImportVocab,
   WaniKaniFetch
-} from '@/wk_types';
+} from './wk_types';
 import {
   ConvRadical,
   ConvKanji,
@@ -13,7 +13,7 @@ import {
   Radical,
   Kanji,
   Vocab
-} from '@/ja_types';
+} from './ja_types';
 
 const Storage = new (class StorageHandler {
   async get (key: string): Promise<string | undefined> {

@@ -93,7 +93,7 @@ export interface WaniKaniAssignment {
   started_at: ISO8601Date | null; // finished lesson
   passed_at: ISO8601Date | null; // SRS = 5
   burned_at: ISO8601Date | null; // SRS = 9
-  resurrected_at: ISO8601Date | null; // 
+  resurrected_at: ISO8601Date | null; //
   hidden: boolean;
   srs_stage: number;
   subject_id: number;

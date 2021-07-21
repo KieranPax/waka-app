@@ -11,11 +11,11 @@
         class="radical-holder"
         @click="toggleRadicals"
       >
-          <r-image
-            v-for="radical in radicals"
-            :key="radical.id"
-            v-bind="{ radical }"
-          />
+        <r-image
+          v-for="radical in radicals"
+          :key="radical.id"
+          v-bind="{ radical }"
+        />
       </div>
       <br>
       <span class="kanji-name">{{ kanji ? kanji.name : '' }}</span>
@@ -56,13 +56,13 @@
 </template>
 
 <script lang="ts">
-import { Kanji, KReading, Radical } from '@/ja_types';
+import { Kanji, KReading, Radical } from '@/oldLib/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import KImage from './Image.vue';
 import RImage from '../Radical/Image.vue';
 import Mnemonic from '../Misc/Mnemonic.vue';
-import { GetRadicalStore } from '@/store_lib';
+import { GetRadicalStore } from '@/oldLib/store_lib';
 
 export default defineComponent({
   name: 'KDetails',
