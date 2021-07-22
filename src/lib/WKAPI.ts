@@ -110,7 +110,7 @@ export interface WKRadical extends WKSubject {
       dimensions?: string; // {W}x{H}
       style_name?: string;
     };
-  };
+  }[];
 }
 
 export interface WKKanji extends WKSubject {
@@ -130,6 +130,7 @@ export interface WKKanji extends WKSubject {
 }
 
 export interface WKVocab extends WKSubject {
+  characters: string;
   component_subject_ids: number[];
   context_sentences: { en: string; ja: string }[];
   meaning_mnemonic: string;
