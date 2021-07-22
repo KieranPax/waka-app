@@ -15,17 +15,17 @@
       </ul>
     </div>
     <div v-if="radical" class="extra-holder">
-      <mnemonic :m="radical.mM" />
+      <mnemonic :m="radical.data.meaning_mnemonic" />
     </div>
   </c-card>
 </template>
 
 <script lang="ts">
-import { Radical } from '@/oldLib/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import RImage from './Image.vue';
 import Mnemonic from '../Misc/Mnemonic.vue';
+import { SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'RDetails',
@@ -39,9 +39,9 @@ export default defineComponent({
   computed: {
     altMeanings (): string[] {
       if (!this.radical) return [];
-      return (this.radical as Radical).m
-        .filter(i => i[1] === 6)
-        .map(i => i[0]);
+      return (this.radical as SRadical).meanings
+        .filter(i => i.a === 2)
+        .map(i => i.t);
     }
   }
 });

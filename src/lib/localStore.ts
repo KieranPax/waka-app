@@ -9,7 +9,7 @@ import {
   WKSubject
 } from './WKAPI';
 import zlib from 'zlib';
-import { SimplifySubject } from './AltTypes';
+import { SimplifySubject, SSubject } from './AltTypes';
 export { GetAPIToken, SetAPIToken };
 
 const deflate = (buffer: string): Promise<string> =>
@@ -62,6 +62,8 @@ export async function CreateSubjectCache (maxLevel: number) {
       return finalBuf;
     })()
   );
+
+  /* ---------- subj_min ---------- */
   pp.push(
     (async () => {
       const parts: [number[], string][] = [];
@@ -87,7 +89,8 @@ export async function CreateSubjectCache (maxLevel: number) {
 const MemCache = {} as {
   user?: WKUser;
   levelComp?: Map<number, string>;
-  levels: Map<number, WKSubject[]>
+  subjectMin?: [number[], string][];
+  levels: Map<number, WKSubject[]>;
 };
 
 export async function GetUser () {
@@ -101,7 +104,47 @@ export async function GetLevelComp (levelId: number) {
       JSON.parse(localStorage.getItem('level_comp') as string)
     );
   }
-  const clevel = await (MemCache.levelComp as Map<number, string>).get(levelId) as string;
-  if(!clevel) throw Error('Level has not been cached');
-  const level = await inflate(clevel);
+  const clevel = (await (MemCache.levelComp as Map<number, string>).get(
+    levelId
+  )) as string;
+  if (!clevel) throw Error('Level has not been cached');
+  return JSON.parse(await inflate(clevel));
+}
+
+export async function GetSubjectMin () {
+  if (!MemCache.subjectMin) {
+    MemCache.subjectMin = JSON.parse(
+      localStorage.getItem('subj_min') as string
+    );
+  }
+  return MemCache.subjectMin as [number[], string][];
+}
+
+export async function GetSubjects (ids: number[]): Promise<SSubject[]> {
+  const subjects = await GetSubjectMin();
+  const toInflate: [number[], string][] = [];
+  for (const i of subjects) {
+    const part = ids.filter(j => i[0].includes(j));
+    if (part.length) {
+      toInflate.push([part, i[1]]);
+    }
+  }
+  const pp = [];
+  for (const i of toInflate) {
+    pp.push(
+      (async () => {
+        const l: SSubject[] = [];
+        const data = JSON.parse(await inflate(i[1])) as SSubject[];
+        for (const j of i[0]) l.push(data.find(a => a.id === j) as SSubject);
+        return l;
+      })()
+    );
+  }
+  return (await Promise.all(pp)).flat();
+}
+
+export async function GetFullSubjects (ids: number[]): Promise<SSubject[]> {
+  // Fetch from online
+  const res = (await FetchSubjects({ ids })).data;
+  return res.map(i => SimplifySubject(i));
 }

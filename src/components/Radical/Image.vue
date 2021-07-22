@@ -2,11 +2,8 @@
 /*
 <r-image>
   <span v-if="!radical" />
-  <span v-else-if="radical.char" lang="ja">{{ radical.char }}</span>
-  <c-icon
-    v-else :name="'@' + radical.img"
-    class="rad-img"
-  />
+  <c-icon v-else-if="radical.char.startsWith('@')" :name="radical.char" class="rad-img" />
+  <span v-else :name="radical.img">{{ radical.char }}</span>
 </r-image>
 */
 
@@ -24,15 +21,14 @@ export default defineComponent({
   },
   render () {
     if (!this.radical) return h('r-image');
-    if (this.radical.char) {
-      return h('r-image', { lang: 'ja' }, this.radical.char);
+    if (this.radical.char.startsWith('@')) {
+      return h(
+        'r-image',
+        { class: 'rad-img' },
+        h(CIcon, { name: this.radical.char })
+      );
     }
-
-    return h(
-      'r-image',
-      { class: 'rad-img' },
-      h(CIcon, { name: '@' + this.radical.img })
-    );
+    return h('r-image', { lang: 'ja' }, this.radical.char);
   }
 });
 </script>

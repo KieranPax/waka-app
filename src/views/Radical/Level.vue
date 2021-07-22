@@ -20,7 +20,11 @@
       }"
       @click="() => updateRadicalDetails()"
     >
-      <r-details class="details-card" v-bind="{ radical: radicalDetails.b }" />
+      <r-details
+        class="details-card"
+        v-if="radicalDetails.b"
+        v-bind="{ radical: radicalDetails.b }"
+      />
     </div>
   </c-view>
 </template>
@@ -31,9 +35,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import RGrid from '@/components/Radical/Grid.vue';
 import RDetails from '@/components/Radical/Details.vue';
-import { GetRadicalStore } from '@/oldLib/store_lib';
-import { Radical } from '@/oldLib/ja_types';
-import { GetUser } from '@/lib/localStore';
+import { GetUser, GetLevelComp, GetSubjects, GetFullSubjects } from '@/lib/localStore';
+import { SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'RLevel',
@@ -42,19 +45,30 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const levelId = Number(route.params.levelId);
-    const level: Ref<Radical[]> = ref([]);
-    const radicalDetails: Ref<{ a: boolean; b?: Radical }> = ref({ a: false });
+    const level: Ref<SRadical[]> = ref([]);
+    const radicalDetails: Ref<{ a: boolean; b?: SRadical }> = ref({ a: false });
     return { router, levelId, level, radicalDetails, showLockedMessage: false };
   },
   methods: {
-    updateRadicalDetails (r?: Radical) {
-      if (r) this.radicalDetails = { a: true, b: r };
-      else this.radicalDetails.a = false;
+    async updateRadicalDetails (r?: SRadical) {
+      if (r) {
+        const rIndex = this.level.findIndex(i => i.id === r.id);
+        if (this.level[rIndex].data) { this.radicalDetails = { a: true, b: this.level[rIndex] } } else {
+          this.radicalDetails = { a: true, b: undefined };
+          const rad = (await GetFullSubjects([r.id])) as SRadical[];
+          this.radicalDetails.b = this.level[rIndex] = rad[0];
+        }
+        console.log(this.radicalDetails.b);
+      } else this.radicalDetails.a = false;
     }
   },
   created () {
-    GetRadicalStore().then(async store => {
-      this.level = await store.byLevel([this.levelId]);
+    GetLevelComp(this.levelId).then(lvlComp => {
+      const ids = lvlComp[0];
+      console.log(lvlComp);
+      GetSubjects(ids).then(lvl => {
+        this.level = lvl as SRadical[];
+      });
     });
     GetUser().then(async user => {
       if (this.levelId > user.subscription.max_level_granted) {

@@ -106,7 +106,7 @@ function SimplifyVocab (item: WKFetchItem<WKVocab>, min = false) {
   return o as SVocab;
 }
 
-export function SimplifySubject (item: WKFetchItem<WKSubject>, min = false) {
+export function SimplifySubject (item: WKFetchItem<WKSubject>, min = false) : SSubject {
   // simplify means its just enough data to generate questions / subject level pages
   if (item.object === 'vocabulary') {
     return SimplifyVocab(item as WKFetchItem<WKVocab>, min);
@@ -117,4 +117,5 @@ export function SimplifySubject (item: WKFetchItem<WKSubject>, min = false) {
   if (item.object === 'radical') {
     return SimplifyRadical(item as WKFetchItem<WKRadical>, min);
   }
+  throw Error('Passed non-subject into SimplifySubject');
 }
