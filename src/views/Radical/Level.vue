@@ -4,6 +4,9 @@
       Radical Level {{ levelId }}
     </c-header>
     <c-content>
+      <div class="locked-message" v-if="showLockedMessage">
+        This level is not included in your subscription plan.
+      </div>
       <r-grid
         v-bind="{ radicals: level }"
         @selectedRadical="updateRadicalDetails"
@@ -30,6 +33,7 @@ import RGrid from '@/components/Radical/Grid.vue';
 import RDetails from '@/components/Radical/Details.vue';
 import { GetRadicalStore } from '@/oldLib/store_lib';
 import { Radical } from '@/oldLib/ja_types';
+import { GetUser } from '@/lib/localStore';
 
 export default defineComponent({
   name: 'RLevel',
@@ -39,20 +43,24 @@ export default defineComponent({
     const route = useRoute();
     const levelId = Number(route.params.levelId);
     const level: Ref<Radical[]> = ref([]);
-    const radicalDetails: Ref<{ a: boolean; b: Radical | undefined }> = ref({
-      a: false,
-      b: undefined
-    });
-    GetRadicalStore().then(async store => {
-      level.value = await store.byLevel([levelId]);
-    });
-    return { router, levelId, level, radicalDetails };
+    const radicalDetails: Ref<{ a: boolean; b?: Radical }> = ref({ a: false });
+    return { router, levelId, level, radicalDetails, showLockedMessage: false };
   },
   methods: {
     updateRadicalDetails (r?: Radical) {
       if (r) this.radicalDetails = { a: true, b: r };
       else this.radicalDetails.a = false;
     }
+  },
+  created () {
+    GetRadicalStore().then(async store => {
+      this.level = await store.byLevel([this.levelId]);
+    });
+    GetUser().then(async user => {
+      if (this.levelId > user.subscription.max_level_granted) {
+        this.showLockedMessage = true;
+      }
+    });
   }
 });
 </script>
@@ -100,5 +108,13 @@ export default defineComponent({
   top: 50%;
   transform: translate(-50%, -50%);
   --question-color: var(--c-color-radical);
+}
+
+.locked-message {
+  padding: 0.8rem;
+  margin: 5px;
+  background: var(--c-color-bad);
+  border: 1px solid var(--c-tint-bad);
+  border-radius: 10px;
 }
 </style>

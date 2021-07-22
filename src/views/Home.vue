@@ -29,12 +29,14 @@
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CCard } from '@/components';
+import { GetUser } from '@/lib/localStore';
 
 export default defineComponent({
   name: 'Home',
   components: { CView, CHeader, CContent, CCard },
   data () {
     const router = useRouter();
+    GetUser();
     return {
       router,
       cards: [

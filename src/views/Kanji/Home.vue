@@ -13,6 +13,7 @@
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CTextlist } from '@/components';
+import { GetUser } from '@/lib/localStore';
 
 export default defineComponent({
   name: 'KHome',
@@ -24,10 +25,17 @@ export default defineComponent({
       lines.push({
         t: 'Level ' + i,
         l: '/kanji/l/' + i,
-        h: false
+        h: 0
       });
     }
     return { router, lines };
+  },
+  created () {
+    GetUser().then(user => {
+      for (let i = user.subscription.max_level_granted; i < 60; i++) {
+        this.lines[i].h = 2;
+      }
+    });
   }
 });
 </script>
