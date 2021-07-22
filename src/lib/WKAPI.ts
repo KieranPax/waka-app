@@ -259,14 +259,14 @@ export async function SetAPIToken (
   status: number;
   errorText?: string;
 }> {
-  if (!value.length) { return { status: 429, errorText: 'Please input an API token' } }
-  if (value.length !== 36) { return { status: 429, errorText: 'Make sure you copied the full token' } }
+  if (!value.length) { return { status: 401, errorText: 'Please input an API token' } }
+  if (value.length !== 36) { return { status: 401, errorText: 'Make sure you copied the full token' } }
   const res: Response = await fetch('https://api.wanikani.com/user', {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + value }
   });
-  if (res.status === 429) {
-    return { status: 429, errorText: 'This is an invlid API token' };
+  if (res.status === 401) {
+    return { status: 401, errorText: 'This is an invlid API token' };
   } else if (res.status !== 200) {
     return { status: res.status, errorText: res.statusText };
   }
