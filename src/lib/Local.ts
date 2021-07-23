@@ -33,12 +33,14 @@ export async function CreateSubjectCache (maxLevel: number) {
   });
   const pp = [];
 
+  const subjects = data.data.filter(i=>!i.data.hidden_at);
+
   /* ---------- level_comp ---------- */
   pp.push(
     (async () => {
       const final: Map<number, string> = new Map();
       for (let i = 1; i <= maxLevel; i++) {
-        const level = data.data.filter(s => s.data.level === i);
+        const level = subjects.filter(s => s.data.level === i);
         const levelComp = new Array(5).fill(0).map(i => new Set());
         for (const s of level) {
           if (s.object === 'vocabulary') {
@@ -67,13 +69,13 @@ export async function CreateSubjectCache (maxLevel: number) {
   pp.push(
     (async () => {
       const parts: [number[], string][] = [];
-      for (let i = 0; i < data.data.length;) {
+      for (let i = 0; i < subjects.length;) {
         const a: number[] = [];
         const b: unknown[] = [];
         for (let j = 0; j < 20; j++) {
-          if (i >= data.data.length) break;
-          a.push(data.data[i].id);
-          b.push(SimplifySubject(data.data[i++], true));
+          if (i >= subjects.length) break;
+          a.push(subjects[i].id);
+          b.push(SimplifySubject(subjects[i++], true));
         }
         parts.push([a, await deflate(JSON.stringify(b))]);
       }
