@@ -35,12 +35,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import RGrid from '@/components/Radical/Grid.vue';
 import RDetails from '@/components/Radical/Details.vue';
-import {
-  GetUser,
-  GetLevelComp,
-  GetSubjects,
-  GetFullSubjects
-} from '@/lib/Local';
+import { GetUser, GetLevelComp, GetSubjects } from '@/lib/Local';
 import { SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({

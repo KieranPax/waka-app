@@ -7,10 +7,7 @@
       <div class="locked-message" v-if="showLockedMessage">
         This level is not included in your subscription plan.
       </div>
-      <k-grid
-        v-bind="{ kanji: level }"
-        @selectedKanji="updateKanjiDetails"
-      />
+      <k-grid v-bind="{ kanji: level }" @selectedKanji="updateKanjiDetails" />
     </c-content>
     <div
       class="screen-cover"
@@ -21,8 +18,10 @@
       @click="() => updateKanjiDetails()"
     >
       <k-details
-        class="details-card" v-bind="{ kanji: kanjiDetails.b }"
+        class="details-card"
         ref="detailsEl"
+        v-if="kanjiDetails.b"
+        v-bind="{ kanji: kanjiDetails.b }"
       />
     </div>
   </c-view>
@@ -34,9 +33,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import KGrid from '@/components/Kanji/Grid.vue';
 import KDetails from '@/components/Kanji/Details.vue';
-import { GetKanjiStore } from '@/oldLib/store_lib';
-import { Kanji } from '@/oldLib/ja_types';
-import { GetUser } from '@/lib/Local';
+import { GetUser, GetLevelComp, GetSubjects } from '@/lib/Local';
+import { SKanji } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'KLevel',
@@ -45,20 +43,26 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const levelId = Number(route.params.levelId);
-    const level: Ref<Kanji[]> = ref([]);
-    const kanjiDetails: Ref<{ a: boolean; b?: Kanji }> = ref({ a: false });
+    const level: Ref<SKanji[]> = ref([]);
+    const kanjiDetails: Ref<{ a: boolean; b?: SKanji }> = ref({ a: false });
     return { router, levelId, level, kanjiDetails, showLockedMessage: false };
   },
   methods: {
-    updateKanjiDetails (k?: Kanji) {
+    updateKanjiDetails (k?: SKanji) {
       if (k) this.kanjiDetails = { a: true, b: k };
       else this.kanjiDetails.a = false;
       (this.$refs.detailsEl as typeof KDetails).updateKanji();
     }
   },
   created () {
-    GetKanjiStore().then(async store => {
-      this.level = await store.byLevel([this.levelId]);
+    GetLevelComp(this.levelId).then(lvlComp => {
+      const ids = lvlComp[1];
+      console.log(lvlComp);
+      GetSubjects(ids).then(lvl => {
+        this.level = (lvl as SKanji[]).sort(
+          (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+        );
+      });
     });
     GetUser().then(async user => {
       if (this.levelId > user.subscription.max_level_granted) {
