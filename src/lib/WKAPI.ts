@@ -250,29 +250,35 @@ export interface WKVoiceActor {
 /*                                    ------------ Fetch functions here ------------ */
 
 export function GetAPIToken () {
-  return localStorage.getItem('api_token');
+  const token = localStorage.getItem('api_token');
+  if (!token) throw 'API token not saved';
+  return token;
 }
 
 export async function SetAPIToken (
   value: string
 ): Promise<{
-  user?: WKFetchObject<WKUser>;
+  user?: WKUser;
   status: number;
   errorText?: string;
 }> {
-  if (!value.length) { return { status: 401, errorText: 'Please input an API token' } }
-  if (value.length !== 36) { return { status: 401, errorText: 'Make sure you copied the full token' } }
-  const res: Response = await fetch('https://api.wanikani.com/user', {
+  if (!value.length) {
+    return { status: 401, errorText: 'Please input an API token' };
+  }
+  if (value.length !== 36) {
+    return { status: 401, errorText: 'Make sure you copied the full token' };
+  }
+  const res: Response = await fetch('https://api.wanikani.com/v2/user', {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + value }
   });
   if (res.status === 401) {
-    return { status: 401, errorText: 'This is an invlid API token' };
+    return { status: 401, errorText: 'Not a valid API token' };
   } else if (res.status !== 200) {
     return { status: res.status, errorText: res.statusText };
   }
   localStorage.setItem('api_token', value);
-  return { status: 200, user: await res.json() };
+  return { status: 200, user: (await res.json()).data };
 }
 
 interface URLObject {
@@ -299,7 +305,7 @@ async function wkfetchjson<T> (info: URLObject) {
     method: 'GET',
     headers: { Authorization: 'Bearer ' + GetAPIToken() }
   });
-  if (res.status !== 200) throw Error(res.statusText);
+  if (res.status !== 200) throw res.statusText;
   return (await res.json()) as T;
 }
 
@@ -312,7 +318,7 @@ async function wkfetchjsonc<T> (info: URLObject) {
       method: 'GET',
       headers: { Authorization: 'Bearer ' + GetAPIToken() }
     });
-    if(res.status !== 200) throw Error(res.statusText);
+    if (res.status !== 200) throw res.statusText;
     const resData = (await res.json()) as WKFetchCollection<unknown>;
     if (!data) data = resData;
     else data.data = [data.data, resData.data].flat();
