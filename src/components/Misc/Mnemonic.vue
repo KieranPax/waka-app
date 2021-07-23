@@ -19,7 +19,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-radical, kanji, vocab{
+radical,
+kanji,
+vocab,
+meaning,
+reading {
   padding: 0.05rem;
   border-radius: 4px;
   margin: 0 0.1rem;
@@ -35,5 +39,10 @@ kanji {
 vocab {
   background: var(--c-color-vocab);
   box-shadow: var(--c-tint-vocab) 1px 1px 2px;
+}
+meaning,
+reading {
+  background: var(--c-color-medium);
+  box-shadow: var(--c-text-color) 1px 1px 2px;
 }
 </style>

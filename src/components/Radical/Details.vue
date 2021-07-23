@@ -15,7 +15,7 @@
       </ul>
     </div>
     <div v-if="radical" class="extra-holder">
-      <mnemonic :m="radical.data.meaning_mnemonic" />
+      <mnemonic :m="radical.mnemonics[0]" />
     </div>
   </c-card>
 </template>

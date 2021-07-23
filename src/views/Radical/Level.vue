@@ -35,7 +35,12 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import RGrid from '@/components/Radical/Grid.vue';
 import RDetails from '@/components/Radical/Details.vue';
-import { GetUser, GetLevelComp, GetSubjects, GetFullSubjects } from '@/lib/Local';
+import {
+  GetUser,
+  GetLevelComp,
+  GetSubjects,
+  GetFullSubjects
+} from '@/lib/Local';
 import { SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
@@ -50,15 +55,10 @@ export default defineComponent({
     return { router, levelId, level, radicalDetails, showLockedMessage: false };
   },
   methods: {
-    async updateRadicalDetails (r?: SRadical) {
+    updateRadicalDetails (r?: SRadical) {
       if (r) {
-        const rIndex = this.level.findIndex(i => i.id === r.id);
-        if (this.level[rIndex].data) { this.radicalDetails = { a: true, b: this.level[rIndex] } } else {
-          this.radicalDetails = { a: true, b: undefined };
-          const rad = (await GetFullSubjects([r.id])) as SRadical[];
-          this.radicalDetails.b = this.level[rIndex] = rad[0];
-        }
-        console.log(this.radicalDetails.b);
+        this.radicalDetails = { a: true, b: r };
+        console.log(r);
       } else this.radicalDetails.a = false;
     }
   },
@@ -67,7 +67,9 @@ export default defineComponent({
       const ids = lvlComp[0];
       console.log(lvlComp);
       GetSubjects(ids).then(lvl => {
-        this.level = lvl as SRadical[];
+        this.level = (lvl as SRadical[]).sort(
+          (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+        );
       });
     });
     GetUser().then(async user => {
