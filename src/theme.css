@@ -64,6 +64,7 @@
   height: 100vh;
   color: var(--c-text-color);
   background-color: #000;
+  overflow: hidden;
 }
 
 #app.original-colors {
