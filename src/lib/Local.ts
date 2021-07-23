@@ -33,7 +33,7 @@ export async function CreateSubjectCache (maxLevel: number) {
   });
   const pp = [];
 
-  const subjects = data.data.filter(i=>!i.data.hidden_at);
+  const subjects = data.data.filter(i => !i.data.hidden_at);
 
   /* ---------- level_comp ---------- */
   pp.push(
@@ -95,7 +95,7 @@ const MemCache = {} as {
   levels: Map<number, WKSubject[]>;
 };
 
-export async function GetUser () {
+export async function GetUser (): Promise<WKUser> {
   if (!MemCache.user) MemCache.user = (await FetchUser()).data;
   return MemCache.user as WKUser;
 }

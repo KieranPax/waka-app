@@ -2,7 +2,7 @@
   <c-card @click.stop="" class="r-details">
     <div class="details-head">
       <r-image v-bind="{ radical }" class="radical-char" /><br>
-      <span class="radical-name">{{ radical ? radical.name : '' }}</span>
+      <span class="radical-name">{{ radical.name }}</span>
     </div>
     <div v-if="altMeanings.length" class="extra-holder">
       <ul
@@ -14,7 +14,7 @@
         }}
       </ul>
     </div>
-    <div v-if="radical" class="extra-holder">
+    <div class="extra-holder">
       <mnemonic :m="radical.mnemonics[0]" />
     </div>
   </c-card>
@@ -38,7 +38,6 @@ export default defineComponent({
   },
   computed: {
     altMeanings (): string[] {
-      if (!this.radical) return [];
       return (this.radical as SRadical).meanings
         .filter(i => i.a === 2)
         .map(i => i.t);

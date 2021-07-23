@@ -21,7 +21,7 @@
         class="details-card"
         ref="detailsEl"
         v-if="kanjiDetails.b"
-        v-bind="{ kanji: kanjiDetails.b }"
+        v-bind="{ kanji: kanjiDetails.b, radicalLookup }"
       />
     </div>
   </c-view>
@@ -34,7 +34,7 @@ import { CView, CHeader, CContent } from '@/components';
 import KGrid from '@/components/Kanji/Grid.vue';
 import KDetails from '@/components/Kanji/Details.vue';
 import { GetUser, GetLevelComp, GetSubjects } from '@/lib/Local';
-import { SKanji } from '@/lib/AltTypes';
+import { SKanji, SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'KLevel',
@@ -45,19 +45,39 @@ export default defineComponent({
     const levelId = Number(route.params.levelId);
     const level: Ref<SKanji[]> = ref([]);
     const kanjiDetails: Ref<{ a: boolean; b?: SKanji }> = ref({ a: false });
-    return { router, levelId, level, kanjiDetails, showLockedMessage: false };
+    const radicalLookup: Ref<SRadical[]> = ref([]);
+    return {
+      router,
+      levelId,
+      level,
+      kanjiDetails,
+      radicalLookup,
+      showLockedMessage: false
+    };
   },
   methods: {
     updateKanjiDetails (k?: SKanji) {
-      if (k) this.kanjiDetails = { a: true, b: k };
-      else this.kanjiDetails.a = false;
-      (this.$refs.detailsEl as typeof KDetails).updateKanji();
+      if (!this.radicalLookup.length) {
+        GetLevelComp(this.levelId).then(lvlComp => {
+          const ids = lvlComp[3];
+          console.log(ids);
+          GetSubjects(ids).then(lvl => {
+            this.radicalLookup = (lvl as SRadical[]).sort(
+              (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+            );
+          });
+        });
+      }
+      if (k) {
+        this.kanjiDetails = { a: true, b: k };
+        console.log(k);
+      } else this.kanjiDetails.a = false;
     }
   },
   created () {
     GetLevelComp(this.levelId).then(lvlComp => {
       const ids = lvlComp[1];
-      console.log(lvlComp);
+      console.log(ids);
       GetSubjects(ids).then(lvl => {
         this.level = (lvl as SKanji[]).sort(
           (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000

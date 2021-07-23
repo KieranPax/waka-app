@@ -10,7 +10,11 @@ export default defineComponent({
     for (let i = 0; i < l.length;) {
       c.push(l[i++]);
       if (i + 1 < l.length) {
-        c.push(h(l[i++], [l[i++]]));
+        if (l[i].startsWith('a')) {
+          c.push(
+            h('a', { href: l[i++].split('"')[1], target: '_blank' }, [l[i++]])
+          );
+        } else c.push(h(l[i++], [l[i++]]));
       }
     }
     return h('mnemonic', c);
@@ -23,7 +27,8 @@ radical,
 kanji,
 vocab,
 meaning,
-reading {
+reading,
+a {
   padding: 0.05rem;
   border-radius: 4px;
   margin: 0 0.1rem;
@@ -40,9 +45,15 @@ vocab {
   background: var(--c-color-vocab);
   box-shadow: var(--c-tint-vocab) 1px 1px 2px;
 }
+reading{
+  background: var(--c-color-light);
+  box-shadow: black 1px 1px 2px;
+  color: var(--c-text-dim-color);
+}
 meaning,
-reading {
+a {
   background: var(--c-color-medium);
-  box-shadow: var(--c-text-color) 1px 1px 2px;
+  box-shadow: black 1px 1px 2px;
+  color: var(--c-text-color);
 }
 </style>

@@ -1,10 +1,10 @@
 import { WKFetchItem, WKKanji, WKRadical, WKSubject, WKVocab } from './WKAPI';
 
-type Meaning = { t: string; a: number };
+export type Meaning = { t: string; a: number };
 // a: 0 = not accepted; 1 = auxiliary; 2 = extra meaning; 3 = primary
-type KReading = { r: string; a: number; t: 'k' | 'o' | 'n' };
-type VReading = { r: string; a: number };
-// a: 0 = not accepted; 1 = extra meaning; 2 = primary
+export type KReading = { r: string; a: number; t: 'k' | 'o' | 'n' };
+export type VReading = { r: string; a: number };
+// a: 0 = not accepted; 1 = extra reading; 2 = primary
 
 export interface SSubject {
   data?: WKRadical;
