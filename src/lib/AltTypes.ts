@@ -6,13 +6,16 @@ type KReading = { r: string; a: number; t: 'k' | 'o' | 'n' };
 type VReading = { r: string; a: number };
 // a: 0 = not accepted; 1 = extra meaning; 2 = primary
 
-
 export interface SSubject {
   data?: WKRadical;
   id: number;
   type: 'r' | 'k' | 'v';
   char: string;
   meanings: Meaning[];
+  mnemonics: string[];
+  level: number;
+  pos: number;
+  srs: number;
 }
 
 export interface SRadical extends SSubject {
@@ -21,12 +24,12 @@ export interface SRadical extends SSubject {
 
 export interface SKanji extends SSubject {
   readings: KReading[];
-  comp: number[]
+  comp: number[];
 }
 
 export interface SVocab extends SSubject {
   readings: VReading[];
-  comp: number[]
+  comp: number[];
 }
 
 function SimplifyRadical (item: WKFetchItem<WKRadical>, min = false) {
@@ -49,7 +52,11 @@ function SimplifyRadical (item: WKFetchItem<WKRadical>, min = false) {
         t: i.meaning,
         a: i.type === 'whitelist' ? 1 : 0
       }))
-    ] as Meaning[]
+    ] as Meaning[],
+    mnemonics: [item.data.meaning_mnemonic],
+    level: item.data.level,
+    pos: item.data.lesson_position,
+    srs: item.data.spaced_repetition_system_id
   };
   if (!min) Object.assign(o, { data: item.data });
   return o as SRadical;
@@ -75,7 +82,16 @@ function SimplifyKanji (item: WKFetchItem<WKKanji>, min = false) {
       a: i.accepted_answer ? (i.primary ? 2 : 1) : 0,
       t: i.type.charAt(0)
     })) as KReading[],
-    comp: item.data.component_subject_ids
+    comp: item.data.component_subject_ids,
+    mnemonics: [
+      item.data.meaning_mnemonic,
+      item.data.reading_mnemonic,
+      item.data.meaning_hint,
+      item.data.reading_hint
+    ],
+    level: item.data.level,
+    pos: item.data.lesson_position,
+    srs: item.data.spaced_repetition_system_id
   };
   if (!min) Object.assign(o, { data: item.data });
   return o as SKanji;
@@ -100,13 +116,20 @@ function SimplifyVocab (item: WKFetchItem<WKVocab>, min = false) {
       r: i.reading,
       a: i.accepted_answer ? (i.primary ? 2 : 1) : 0
     })) as VReading[],
-    comp: item.data.component_subject_ids
+    comp: item.data.component_subject_ids,
+    mnemonics: [item.data.meaning_mnemonic, item.data.reading_mnemonic],
+    level: item.data.level,
+    pos: item.data.lesson_position,
+    srs: item.data.spaced_repetition_system_id
   };
   if (!min) Object.assign(o, { data: item.data });
   return o as SVocab;
 }
 
-export function SimplifySubject (item: WKFetchItem<WKSubject>, min = false) : SSubject {
+export function SimplifySubject (
+  item: WKFetchItem<WKSubject>,
+  min = false
+): SSubject {
   // simplify means its just enough data to generate questions / subject level pages
   if (item.object === 'vocabulary') {
     return SimplifyVocab(item as WKFetchItem<WKVocab>, min);
