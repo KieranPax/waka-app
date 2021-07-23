@@ -312,6 +312,7 @@ async function wkfetchjsonc<T> (info: URLObject) {
       method: 'GET',
       headers: { Authorization: 'Bearer ' + GetAPIToken() }
     });
+    if(res.status !== 200) throw Error(res.statusText);
     const resData = (await res.json()) as WKFetchCollection<unknown>;
     if (!data) data = resData;
     else data.data = [data.data, resData.data].flat();
