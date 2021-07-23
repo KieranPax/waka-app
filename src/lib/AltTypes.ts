@@ -32,7 +32,7 @@ export interface SVocab extends SSubject {
   comp: number[];
 }
 
-function SimplifyRadical (item: WKFetchItem<WKRadical>, min = false) {
+function SimplifyRadical (item: WKFetchItem<WKRadical>) {
   const o = {
     id: item.id,
     type: item.object.charAt(0),
@@ -58,11 +58,10 @@ function SimplifyRadical (item: WKFetchItem<WKRadical>, min = false) {
     pos: item.data.lesson_position,
     srs: item.data.spaced_repetition_system_id
   };
-  if (!min) Object.assign(o, { data: item.data });
   return o as SRadical;
 }
 
-function SimplifyKanji (item: WKFetchItem<WKKanji>, min = false) {
+function SimplifyKanji (item: WKFetchItem<WKKanji>) {
   const o = {
     id: item.id,
     type: item.object.charAt(0),
@@ -93,11 +92,10 @@ function SimplifyKanji (item: WKFetchItem<WKKanji>, min = false) {
     pos: item.data.lesson_position,
     srs: item.data.spaced_repetition_system_id
   };
-  if (!min) Object.assign(o, { data: item.data });
   return o as SKanji;
 }
 
-function SimplifyVocab (item: WKFetchItem<WKVocab>, min = false) {
+function SimplifyVocab (item: WKFetchItem<WKVocab>) {
   const o = {
     id: item.id,
     type: item.object.charAt(0),
@@ -122,23 +120,21 @@ function SimplifyVocab (item: WKFetchItem<WKVocab>, min = false) {
     pos: item.data.lesson_position,
     srs: item.data.spaced_repetition_system_id
   };
-  if (!min) Object.assign(o, { data: item.data });
   return o as SVocab;
 }
 
 export function SimplifySubject (
-  item: WKFetchItem<WKSubject>,
-  min = false
+  item: WKFetchItem<WKSubject>
 ): SSubject {
   // simplify means its just enough data to generate questions / subject level pages
   if (item.object === 'vocabulary') {
-    return SimplifyVocab(item as WKFetchItem<WKVocab>, min);
+    return SimplifyVocab(item as WKFetchItem<WKVocab>);
   }
   if (item.object === 'kanji') {
-    return SimplifyKanji(item as WKFetchItem<WKKanji>, min);
+    return SimplifyKanji(item as WKFetchItem<WKKanji>);
   }
   if (item.object === 'radical') {
-    return SimplifyRadical(item as WKFetchItem<WKRadical>, min);
+    return SimplifyRadical(item as WKFetchItem<WKRadical>);
   }
   throw Error('Passed non-subject into SimplifySubject');
 }

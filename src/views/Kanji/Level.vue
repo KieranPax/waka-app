@@ -33,7 +33,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import KGrid from '@/components/Kanji/Grid.vue';
 import KDetails from '@/components/Kanji/Details.vue';
-import { GetUser, GetLevelComp, GetSubjects } from '@/lib/Local';
+import { GetUser, GetLevelComp, GetSubjects, GetLevelOnline } from '@/lib/Local';
 import { SKanji, SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
@@ -58,14 +58,11 @@ export default defineComponent({
   methods: {
     updateKanjiDetails (k?: SKanji) {
       if (!this.radicalLookup.length) {
-        GetLevelComp(this.levelId).then(lvlComp => {
-          const ids = lvlComp[3];
-          console.log(ids);
-          GetSubjects(ids).then(lvl => {
-            this.radicalLookup = (lvl as SRadical[]).sort(
-              (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
-            );
-          });
+        const radicals = [...new Set(this.level.map(i=>i.comp).flat())];
+        GetSubjects(radicals).then(lvl => {
+          this.radicalLookup = (lvl as SRadical[]).sort(
+            (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+          );
         });
       }
       if (k) {
@@ -79,6 +76,12 @@ export default defineComponent({
       const ids = lvlComp[1];
       console.log(ids);
       GetSubjects(ids).then(lvl => {
+        this.level = (lvl as SKanji[]).sort(
+          (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+        );
+      });
+    }).catch(()=>{
+      GetLevelOnline(this.levelId,'kanji').then(lvl => {
         this.level = (lvl as SKanji[]).sort(
           (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
         );

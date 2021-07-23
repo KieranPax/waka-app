@@ -75,7 +75,7 @@ export async function CreateSubjectCache (maxLevel: number) {
         for (let j = 0; j < 20; j++) {
           if (i >= subjects.length) break;
           a.push(subjects[i].id);
-          b.push(SimplifySubject(subjects[i++], true));
+          b.push(SimplifySubject(subjects[i++]));
         }
         parts.push([a, await deflate(JSON.stringify(b))]);
       }
@@ -126,6 +126,37 @@ export async function GetSubjects (ids: number[]): Promise<SSubject[]> {
   const subjects = await GetSubjectMin();
   const toInflate: [number[], string][] = [];
   for (const i of subjects) {
+    const part = i[0].filter(j => ids.includes(j));
+    ids = ids.filter(j => !part.includes(j));
+    if (part.length) {
+      toInflate.push([part, i[1]]);
+    }
+  }
+  console.log({ ids });
+  const pp = [];
+  for (const i of toInflate) {
+    pp.push(
+      (async () => {
+        const l: SSubject[] = [];
+        const data = JSON.parse(await inflate(i[1])) as SSubject[];
+        for (const j of i[0]) l.push(data.find(a => a.id === j) as SSubject);
+        return l;
+      })()
+    );
+  }
+  if (ids.length) {
+    pp.push(
+      (async () =>
+        await (await FetchSubjects({ ids })).data.map(SimplifySubject))()
+    );
+  }
+  return (await Promise.all(pp)).flat();
+}
+
+export async function GetLevel (ids: number[]): Promise<SSubject[]> {
+  const subjects = await GetSubjectMin();
+  const toInflate: [number[], string][] = [];
+  for (const i of subjects) {
     const part = ids.filter(j => i[0].includes(j));
     if (part.length) {
       toInflate.push([part, i[1]]);
@@ -145,8 +176,11 @@ export async function GetSubjects (ids: number[]): Promise<SSubject[]> {
   return (await Promise.all(pp)).flat();
 }
 
-export async function GetFullSubjects (ids: number[]): Promise<SSubject[]> {
-  // Fetch from online
-  const res = (await FetchSubjects({ ids })).data;
-  return res.map(i => SimplifySubject(i));
+export async function GetLevelOnline (
+  levelId: number,
+  type: 'radical' | 'kanji' | 'vocabulary'
+) {
+  return (await FetchSubjects({ levels: [levelId], types: type })).data.map(
+    SimplifySubject
+  );
 }
