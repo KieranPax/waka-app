@@ -81,7 +81,7 @@ export default defineComponent({
         {
           title: 'Vocabulary',
           desc: 'Test your vocabulary knowledge here',
-          color: 'medium',
+          color: 'vocab',
           icon: '単語',
           func: () => router.push('vocab')
         }
