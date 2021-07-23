@@ -1,3 +1,3 @@
-import RHome from './Home.vue';
-import RLevel from './Level.vue';
+import RHome from './RHome.vue';
+import RLevel from './RLevel.vue';
 export { RHome, RLevel };
