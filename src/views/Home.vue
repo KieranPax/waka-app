@@ -91,12 +91,23 @@ export default defineComponent({
   methods: {
     resetUser (user?: WKUser) {
       if (user) {
+        localStorage.setItem(
+          'user_saved',
+          JSON.stringify({ user, date: Date.now() })
+        );
         this.user = user;
         this.loginFail = false;
       } else {
         GetUser()
           .then(res => {
+            const s = localStorage.getItem('user_saved');
             this.user = res;
+            if (s) {
+              const u = JSON.parse(s).user as WKUser;
+              if(this.user.level !== u.level) alert('level up / down');
+              if(this.user.current_vacation_started_at !== u.current_vacation_started_at) alert('vacation update');
+              if(this.user.subscription.period_ends_at !== u.subscription.period_ends_at) alert('subscription update');
+            }
             console.log(res);
           })
           .catch(rej => {
