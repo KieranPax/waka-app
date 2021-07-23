@@ -4,7 +4,7 @@
       class="list-item"
       v-for="i in lines"
       :key="i.t"
-      :class="{ highlighted: i.h }"
+      :class="{ highlighted: i.h===1, disabled: i.h===2 }"
       :to="i.l ? i.l : 0"
     >
       {{ i.t }}
@@ -42,16 +42,13 @@ export default defineComponent({
   background: var(--c-color-hover);
 }
 
-.list-item:active {
-  background: var(--c-color-step-100);
-}
-
 .highlighted {
   background: var(--c-color-medium);
   border-radius: 2px;
 }
 
-.highlighted:hover {
-  background: var(--c-color-medium-tint);
+.disabled {
+  color: var(--c-text-dim-color);
+  border-radius: 2px;
 }
 </style>

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Kanji } from '@/ja_types';
+import { SKanji } from '@/lib/AltTypes';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import KImage from './Image.vue';
@@ -28,10 +28,10 @@ export default defineComponent({
   emits: ['selectedKanji'],
   computed: {
     rows () {
-      const l: { i: number; k: Kanji[] }[] = [];
-      const row: Kanji[] = [];
+      const l: { i: number; k: SKanji[] }[] = [];
+      const row = [];
       for (let i = 0; i < this.kanji.length; i++) {
-        row.push(this.kanji[i] as Kanji);
+        row.push(this.kanji[i] as SKanji);
         if (row.length >= 3) l.push({ i: l.length, k: row.splice(0) });
       }
       if (row.length) l.push({ i: l.length, k: row });

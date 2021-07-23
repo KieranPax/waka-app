@@ -2,8 +2,18 @@
   <c-view>
     <c-header>
       Homepage
+      <span class="sub-header">{{ user ? user.username : '' }}</span>
+      <span class="sub-sub-header">{{
+        user && user.subscription.type === 'free' ? 'Free trial' : ''
+      }}</span>
     </c-header>
     <c-content>
+      <c-card v-if="user && user.current_vacation_started_at" class="mode-card">
+        <span
+          class="card-desc"
+        >Looks you're on vacation right now. Click here if you would like to
+          update that.</span>
+      </c-card>
       <c-card
         v-for="card in cards"
         :key="card.title"
@@ -12,7 +22,8 @@
       >
         <template #head>
           <div
-            class="mode-head" lang="ja"
+            class="mode-head"
+            lang="ja"
             :style="{ background: 'var(--c-color-' + card.color + ')' }"
           >
             {{ card.icon }}
@@ -26,17 +37,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CCard } from '@/components';
+import { GetUser } from '@/lib/Local';
+import { WKUser } from '@/lib/WKAPI';
 
 export default defineComponent({
   name: 'Home',
   components: { CView, CHeader, CContent, CCard },
   data () {
     const router = useRouter();
+    const user: Ref<null | WKUser> = ref(null);
+    GetUser().then(res => {
+      console.log(res);
+      user.value = res;
+    });
     return {
       router,
+      user,
       cards: [
         {
           title: 'Radicals',
@@ -84,5 +103,17 @@ export default defineComponent({
 .card-desc {
   font-size: 0.8em;
   color: var(--c-text-fade-color);
+}
+
+.sub-header {
+  padding-left: 1rem;
+  font-size: 0.8em;
+  color: var(--c-text-fade-color);
+}
+
+.sub-sub-header {
+  padding-left: 1rem;
+  font-size: 0.5em;
+  color: var(--c-text-dim-color);
 }
 </style>

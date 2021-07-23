@@ -4,6 +4,9 @@
       Radical Level {{ levelId }}
     </c-header>
     <c-content>
+      <div class="locked-message" v-if="showLockedMessage">
+        This level is not included in your subscription plan.
+      </div>
       <r-grid
         v-bind="{ radicals: level }"
         @selectedRadical="updateRadicalDetails"
@@ -17,7 +20,11 @@
       }"
       @click="() => updateRadicalDetails()"
     >
-      <r-details class="details-card" v-bind="{ radical: radicalDetails.b }" />
+      <r-details
+        class="details-card"
+        v-if="radicalDetails.b"
+        v-bind="{ radical: radicalDetails.b }"
+      />
     </div>
   </c-view>
 </template>
@@ -28,8 +35,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import RGrid from '@/components/Radical/Grid.vue';
 import RDetails from '@/components/Radical/Details.vue';
-import { GetRadicalStore } from '@/store_lib';
-import { Radical } from '@/ja_types';
+import { GetUser, GetLevelComp, GetSubjects } from '@/lib/Local';
+import { SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'RLevel',
@@ -38,21 +45,33 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const levelId = Number(route.params.levelId);
-    const level: Ref<Radical[]> = ref([]);
-    const radicalDetails: Ref<{ a: boolean; b: Radical | undefined }> = ref({
-      a: false,
-      b: undefined
-    });
-    GetRadicalStore().then(async store => {
-      level.value = await store.byLevel([levelId]);
-    });
-    return { router, levelId, level, radicalDetails };
+    const level: Ref<SRadical[]> = ref([]);
+    const radicalDetails: Ref<{ a: boolean; b?: SRadical }> = ref({ a: false });
+    return { router, levelId, level, radicalDetails, showLockedMessage: false };
   },
   methods: {
-    updateRadicalDetails (r?: Radical) {
-      if(r) this.radicalDetails = {a:true,b:r};
-      else this.radicalDetails.a = false;
+    updateRadicalDetails (r?: SRadical) {
+      if (r) {
+        this.radicalDetails = { a: true, b: r };
+        console.log(r);
+      } else this.radicalDetails.a = false;
     }
+  },
+  created () {
+    GetLevelComp(this.levelId).then(lvlComp => {
+      const ids = lvlComp[0];
+      console.log(lvlComp);
+      GetSubjects(ids).then(lvl => {
+        this.level = (lvl as SRadical[]).sort(
+          (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+        );
+      });
+    });
+    GetUser().then(async user => {
+      if (this.levelId > user.subscription.max_level_granted) {
+        this.showLockedMessage = true;
+      }
+    });
   }
 });
 </script>
@@ -100,5 +119,13 @@ export default defineComponent({
   top: 50%;
   transform: translate(-50%, -50%);
   --question-color: var(--c-color-radical);
+}
+
+.locked-message {
+  padding: 0.8rem;
+  margin: 5px;
+  background: var(--c-color-bad);
+  border: 1px solid var(--c-tint-bad);
+  border-radius: 10px;
 }
 </style>

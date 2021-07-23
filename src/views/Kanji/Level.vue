@@ -4,10 +4,10 @@
       Kanji Level {{ levelId }}
     </c-header>
     <c-content>
-      <k-grid
-        v-bind="{ kanji: level }"
-        @selectedKanji="updateKanjiDetails"
-      />
+      <div class="locked-message" v-if="showLockedMessage">
+        This level is not included in your subscription plan.
+      </div>
+      <k-grid v-bind="{ kanji: level }" @selectedKanji="updateKanjiDetails" />
     </c-content>
     <div
       class="screen-cover"
@@ -17,19 +17,24 @@
       }"
       @click="() => updateKanjiDetails()"
     >
-      <k-details class="details-card" v-bind="{ kanji: kanjiDetails.b }" ref="detailsEl" />
+      <k-details
+        class="details-card"
+        ref="detailsEl"
+        v-if="kanjiDetails.b"
+        v-bind="{ kanji: kanjiDetails.b, radicalLookup }"
+      />
     </div>
   </c-view>
 </template>
 
 <script lang="ts">
-import { Component, defineComponent, ref, Ref } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { CView, CHeader, CContent } from '@/components';
 import KGrid from '@/components/Kanji/Grid.vue';
 import KDetails from '@/components/Kanji/Details.vue';
-import { GetKanjiStore } from '@/store_lib';
-import { Kanji } from '@/ja_types';
+import { GetUser, GetLevelComp, GetSubjects } from '@/lib/Local';
+import { SKanji, SRadical } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'KLevel',
@@ -38,22 +43,52 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const levelId = Number(route.params.levelId);
-    const level: Ref<Kanji[]> = ref([]);
-    const kanjiDetails: Ref<{ a: boolean; b: Kanji | undefined }> = ref({
-      a: false,
-      b: undefined
-    });
-    GetKanjiStore().then(async store => {
-      level.value = await store.byLevel([levelId]);
-    });
-    return { router, levelId, level, kanjiDetails };
+    const level: Ref<SKanji[]> = ref([]);
+    const kanjiDetails: Ref<{ a: boolean; b?: SKanji }> = ref({ a: false });
+    const radicalLookup: Ref<SRadical[]> = ref([]);
+    return {
+      router,
+      levelId,
+      level,
+      kanjiDetails,
+      radicalLookup,
+      showLockedMessage: false
+    };
   },
   methods: {
-    updateKanjiDetails (k?: Kanji) {
-      if(k) this.kanjiDetails = {a:true,b:k};
-      else this.kanjiDetails.a = false;
-      (this.$refs.detailsEl as typeof KDetails).updateKanji();
+    updateKanjiDetails (k?: SKanji) {
+      if (!this.radicalLookup.length) {
+        GetLevelComp(this.levelId).then(lvlComp => {
+          const ids = lvlComp[3];
+          console.log(ids);
+          GetSubjects(ids).then(lvl => {
+            this.radicalLookup = (lvl as SRadical[]).sort(
+              (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+            );
+          });
+        });
+      }
+      if (k) {
+        this.kanjiDetails = { a: true, b: k };
+        console.log(k);
+      } else this.kanjiDetails.a = false;
     }
+  },
+  created () {
+    GetLevelComp(this.levelId).then(lvlComp => {
+      const ids = lvlComp[1];
+      console.log(ids);
+      GetSubjects(ids).then(lvl => {
+        this.level = (lvl as SKanji[]).sort(
+          (a, b) => a.pos - b.pos + (a.srs - b.srs) * 1000
+        );
+      });
+    });
+    GetUser().then(async user => {
+      if (this.levelId > user.subscription.max_level_granted) {
+        this.showLockedMessage = true;
+      }
+    });
   }
 });
 </script>
@@ -101,5 +136,13 @@ export default defineComponent({
   top: 50%;
   transform: translate(-50%, -50%);
   --question-color: var(--c-color-kanji);
+}
+
+.locked-message {
+  padding: 0.8rem;
+  margin: 5px;
+  background: var(--c-color-bad);
+  border: 1px solid var(--c-tint-bad);
+  border-radius: 10px;
 }
 </style>

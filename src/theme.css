@@ -2,6 +2,7 @@
   --c-background-color: #121212;
   --c-text-color: #ffffff;
   --c-text-fade-color: #a3a3a3;
+  --c-text-dim-color: #808080;
   --c-border-color: #282828;
   --c-card-background: #1e1e1e;
   --c-header-background: #1f1f1f;
@@ -31,7 +32,7 @@
   --c-color-kanji: #c41389;
   --c-color-vocab: #970fdb;
   --c-color-good: #24d039;
-  --c-color-bad: #ff2642;
+  --c-color-bad: #af1227;
   --c-color-light: #f4f5f8;
   --c-color-medium: #989aa2;
   --c-color-dark: #222428;
@@ -40,7 +41,7 @@
   --c-tint-kanji: #750b52;
   --c-tint-vocab: #5a0983;
   --c-tint-good: #157c22;
-  --c-tint-bad: #991627;
+  --c-tint-bad: #741925;
 
   user-select: none;
 

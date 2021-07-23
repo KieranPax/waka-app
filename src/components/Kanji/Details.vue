@@ -2,23 +2,25 @@
   <c-card @click.stop="" class="k-details">
     <div class="details-head">
       <k-image
-        v-if="!showRadicals"
+        v-if="!showRadicals || radicals.length <= 1"
         v-bind="{ kanji }"
         @click="toggleRadicals"
       />
       <div
-        v-else-if="radicals.length"
+        v-else
         class="radical-holder"
+        :style="{ 'line-height': radicals.length <= 3 ? '2em' : '' }"
         @click="toggleRadicals"
       >
-          <r-image
-            v-for="radical in radicals"
-            :key="radical.id"
-            v-bind="{ radical }"
-          />
+        <r-image
+          v-for="radical in radicals"
+          :key="radical.id"
+          :style="{ 'font-size': radicals.length <= 2 ? '1.2em' : '' }"
+          v-bind="{ radical }"
+        />
       </div>
       <br>
-      <span class="kanji-name">{{ kanji ? kanji.name : '' }}</span>
+      <span class="kanji-name">{{ kanji.meanings.find(i => i.a === 3).t }}</span>
     </div>
     <div v-if="altMeanings.length" class="extra-holder">
       <ul
@@ -30,39 +32,44 @@
         }}
       </ul>
     </div>
-    <div v-if="kanji" class="extra-holder">
-      <mnemonic :m="kanji.mM" />
+    <div class="extra-holder">
+      <mnemonic :m="kanji.mnemonics[0]" />
     </div>
     <div class="splitter" />
-    <div v-if="readings[0]" class="extra-holder">
+    <div class="extra-holder">
+      <span class="reading-type">On:</span>
       <span
-        v-for="r in readings[1]" :key="r"
-        class="onyomi-reading"
+        v-for="r in readings[0]"
+        :key="r.r"
+        class="reading"
+        :class="{ 'primary-reading': r.a === 2 }"
       >
-        {{ r }}
+        {{ r.r }}
       </span>
       <br>
+      <span class="reading-type">Kun:</span>
       <span
-        v-for="r in readings[2]" :key="r"
-        class="kunyomi-reading"
+        v-for="r in readings[1]"
+        :key="r.r"
+        class="reading"
+        :class="{ 'primary-reading': r.a === 2 }"
       >
-        {{ r }}
+        {{ r.r }}
       </span>
     </div>
-    <div v-if="kanji" class="extra-holder">
-      <mnemonic :m="kanji.rM" />
+    <div class="extra-holder">
+      <mnemonic :m="kanji.mnemonics[1]" />
     </div>
   </c-card>
 </template>
 
 <script lang="ts">
-import { Kanji, KReading, Radical } from '@/ja_types';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import KImage from './Image.vue';
 import RImage from '../Radical/Image.vue';
 import Mnemonic from '../Misc/Mnemonic.vue';
-import { GetRadicalStore } from '@/store_lib';
+import { SKanji, SRadical, KReading } from '@/lib/AltTypes';
 
 export default defineComponent({
   name: 'KDetails',
@@ -70,42 +77,37 @@ export default defineComponent({
   props: {
     kanji: {
       type: Object,
-      default: () => undefined
+      required: true
+    },
+    radicalLookup: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
-    return { radicals: [] as Radical[], showRadicals: false };
+    return { showRadicals: false };
   },
   methods: {
-    updateKanji () {
-      this.showRadicals = false;
-      this.radicals = [];
-    },
     toggleRadicals () {
       this.showRadicals = !this.showRadicals;
-      if (!this.radicals.length) {
-        GetRadicalStore().then(async store => {
-          if (this.kanji) this.radicals = await store.byID(this.kanji.comp);
-          else this.radicals = [];
-        });
-      }
     }
   },
   computed: {
     altMeanings (): string[] {
-      if (!this.kanji) return [];
-      return (this.kanji as Kanji).m.filter(i => i[1] === 6).map(i => i[0]);
+      return (this.kanji as SKanji).meanings
+        .filter(i => i.a === 2)
+        .map(i => i.t);
     },
-    readings (): [boolean, string[], string[]] {
-      if (!this.kanji) return [false, [], []];
+    radicals (): SRadical[] {
+      if (!this.radicalLookup.length) return [];
+      return (this.radicalLookup as SRadical[]).filter(i =>
+        (this.kanji as SKanji).comp.includes(i.id)
+      );
+    },
+    readings (): KReading[][] {
       return [
-        true,
-        this.kanji.r
-          .filter((i: KReading) => i[1] === 'o')
-          .map((i: KReading) => i[0]),
-        this.kanji.r
-          .filter((i: KReading) => i[1] === 'k')
-          .map((i: KReading) => i[0])
+        (this.kanji as SKanji).readings.filter(i => i.t === 'o'),
+        (this.kanji as SKanji).readings.filter(i => i.t === 'k')
       ];
     }
   }
@@ -140,6 +142,7 @@ k-image {
   font-size: 2.9em;
   min-height: 2.5em;
   line-height: 1em;
+  width: 100%;
 }
 
 r-image {
@@ -163,16 +166,30 @@ r-image {
 }
 
 .onyomi-reading {
-  padding-right: 10px;
+  padding-right: 1em;
   padding-left: 5px;
   font-size: 1.1em;
 }
 
-.kunyomi-reading {
-  padding-right: 10px;
+.reading-type {
+  display: inline-block;
   padding-left: 5px;
-  color: var(--c-color-step-700);
+  width: 4ch;
+  font-size: 0.7em;
+}
+
+.reading {
+  padding-right: 3ch;
+  padding-left: 5px;
+  color: var(--c-text-fade-color);
   font-size: 0.9em;
+}
+
+.primary-reading {
+  padding-right: 1.5em;
+  padding-left: 5px;
+  color: var(--c-text-color);
+  font-size: 1.1em;
 }
 
 .splitter {
@@ -180,8 +197,9 @@ r-image {
   width: 96%;
   left: 2%;
   background: var(--c-tint-kanji);
-  height: 1px;
+  height: 2px;
   opacity: 0.4;
   margin-top: 0.5rem;
+  box-shadow: var(--c-tint-kanji) 0 0 3px;
 }
 </style>

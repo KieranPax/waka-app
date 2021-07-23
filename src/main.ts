@@ -4,4 +4,6 @@ import router from './router';
 
 import '@/theme.css';
 
-createApp(App).use(router).mount('#app');
+createApp(App)
+  .use(router)
+  .mount('#app');

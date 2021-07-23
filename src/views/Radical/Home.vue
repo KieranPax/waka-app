@@ -10,24 +10,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CTextlist } from '@/components';
+import { GetUser } from '@/lib/Local';
 
 export default defineComponent({
   name: 'RHome',
   components: { CView, CHeader, CContent, CTextlist },
   data () {
     const router = useRouter();
-    const lines = [];
+    const lines: Ref<{ t: string; l: string; h: number }[]> = ref([]);
     for (let i = 1; i <= 60; i++) {
-      lines.push({
+      lines.value.push({
         t: 'Level ' + i,
         l: '/radical/l/' + i,
-        h: false
+        h: 0
       });
     }
     return { router, lines };
+  },
+  created () {
+    GetUser().then(user => {
+      for (let i = user.subscription.max_level_granted; i < 60; i++) {
+        this.lines[i].h = 2;
+      }
+    });
   }
 });
 </script>
