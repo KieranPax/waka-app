@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Radical } from '@/oldLib/ja_types';
+import { SRadical } from '@/lib/AltTypes';
 import { defineComponent } from 'vue';
 import CCard from '../CCard.vue';
 import RImage from './Image.vue';
@@ -28,10 +28,10 @@ export default defineComponent({
   emits: ['selectedRadical'],
   computed: {
     rows () {
-      const l: { i: number; r: Radical[] }[] = [];
-      const row: Radical[] = [];
+      const l: { i: number; r: SRadical[] }[] = [];
+      const row = [];
       for (let i = 0; i < this.radicals.length; i++) {
-        row.push(this.radicals[i] as Radical);
+        row.push(this.radicals[i] as SRadical);
         if (row.length >= 3) l.push({ i: l.length, r: row.splice(0) });
       }
       if (row.length) l.push({ i: l.length, r: row });
