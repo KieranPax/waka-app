@@ -33,6 +33,15 @@
         <span class="card-desc">{{ card.desc }}</span>
       </c-card>
     </c-content>
+    <div
+      class="screen-cover"
+      :style="{
+        opacity: loginFail ? 1 : 0,
+        'pointer-events': loginFail ? 'all' : 'none'
+      }"
+    >
+      <home-welcome-screen @success="resetUser" />
+    </div>
   </c-view>
 </template>
 
@@ -40,22 +49,20 @@
 import { defineComponent, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CCard } from '@/components';
+import HomeWelcomeScreen from '@/components/Misc/HomeWelcomeScreen.vue';
 import { GetUser } from '@/lib/Local';
 import { WKUser } from '@/lib/WKAPI';
 
 export default defineComponent({
   name: 'Home',
-  components: { CView, CHeader, CContent, CCard },
+  components: { CView, CHeader, CContent, CCard, HomeWelcomeScreen },
   data () {
     const router = useRouter();
     const user: Ref<null | WKUser> = ref(null);
-    GetUser().then(res => {
-      console.log(res);
-      user.value = res;
-    });
     return {
       router,
       user,
+      loginFail: false,
       cards: [
         {
           title: 'Radicals',
@@ -80,6 +87,26 @@ export default defineComponent({
         }
       ]
     };
+  },
+  methods: {
+    resetUser (user?: WKUser) {
+      if (user) {
+        this.user = user;
+        this.loginFail = false;
+      } else {
+        GetUser()
+          .then(res => {
+            this.user = res;
+            console.log(res);
+          })
+          .catch(rej => {
+            this.loginFail = true;
+          });
+      }
+    }
+  },
+  created () {
+    this.resetUser();
   }
 });
 </script>
@@ -115,5 +142,15 @@ export default defineComponent({
   padding-left: 1rem;
   font-size: 0.5em;
   color: var(--c-text-dim-color);
+}
+
+.screen-cover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  transition: opacity 0.4s;
 }
 </style>
