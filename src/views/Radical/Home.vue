@@ -13,7 +13,7 @@
 import { defineComponent, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CTextlist } from '@/components';
-import { GetUser } from '@/lib/localStore';
+import { GetUser } from '@/lib/Local';
 
 export default defineComponent({
   name: 'RHome',

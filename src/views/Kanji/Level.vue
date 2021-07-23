@@ -36,7 +36,7 @@ import KGrid from '@/components/Kanji/Grid.vue';
 import KDetails from '@/components/Kanji/Details.vue';
 import { GetKanjiStore } from '@/oldLib/store_lib';
 import { Kanji } from '@/oldLib/ja_types';
-import { GetUser } from '@/lib/localStore';
+import { GetUser } from '@/lib/Local';
 
 export default defineComponent({
   name: 'KLevel',

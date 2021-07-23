@@ -40,7 +40,7 @@
 import { defineComponent, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { CView, CHeader, CContent, CCard } from '@/components';
-import { GetUser } from '@/lib/localStore';
+import { GetUser } from '@/lib/Local';
 import { WKUser } from '@/lib/WKAPI';
 
 export default defineComponent({
