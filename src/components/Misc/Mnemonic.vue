@@ -10,10 +10,12 @@ export default defineComponent({
     for (let i = 0; i < l.length;) {
       c.push(l[i++]);
       if (i + 1 < l.length) {
-        if (l[i].startsWith('a')) {
+        if (l[i].startsWith('a ')) {
           c.push(
             h('a', { href: l[i++].split('"')[1], target: '_blank' }, [l[i++]])
           );
+        } else if (l[i] === 'ja') {
+          c.push(h('span', { lang: l[i++] }, [l[i++]]));
         } else c.push(h(l[i++], [l[i++]]));
       }
     }
@@ -45,7 +47,7 @@ vocab {
   background: var(--c-color-vocab);
   box-shadow: var(--c-tint-vocab) 1px 1px 2px;
 }
-reading{
+reading {
   background: var(--c-color-light);
   box-shadow: black 1px 1px 2px;
   color: var(--c-text-dim-color);

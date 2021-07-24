@@ -1,2 +1,3 @@
 import VHome from './VHome.vue';
-export { VHome };
+import VLevel from './VLevel.vue';
+export { VHome, VLevel };
