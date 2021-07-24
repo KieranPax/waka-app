@@ -3,6 +3,7 @@ import Home from '@/views/Home.vue';
 import { RHome, RLevel } from '@/views/Radical';
 import { KHome, KLevel } from '@/views/Kanji';
 import { VHome, VLevel } from '@/views/Vocab';
+import { StudyHome } from '@/views/Study';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: Home },
@@ -14,7 +15,9 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/kanji/l/:levelId', component: KLevel },
 
   { path: '/vocab', component: VHome },
-  { path: '/vocab/l/:levelId', component: VLevel }
+  { path: '/vocab/l/:levelId', component: VLevel },
+
+  { path: '/study', component: StudyHome }
 ];
 
 const router = createRouter({

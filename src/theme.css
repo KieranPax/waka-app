@@ -31,6 +31,7 @@
   --c-color-radical: #0e94d8;
   --c-color-kanji: #c41389;
   --c-color-vocab: #970fdb;
+  --c-color-navy: #3254d8;
   --c-color-good: #24d039;
   --c-color-bad: #af1227;
   --c-color-light: #f4f5f8;
@@ -71,6 +72,7 @@
   --c-color-radical: #0093dd;
   --c-color-kanji: #ce0f8e;
   --c-color-vocab: #aa38c6;
+  --c-color-navy: #294ddb;
 }
 
 * {

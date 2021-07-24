@@ -66,24 +66,31 @@ export default defineComponent({
       cards: [
         {
           title: 'Radicals',
-          desc: 'Test your Radical naming skills here',
+          desc: 'Revise your Radical knowledge here',
           color: 'radical',
           icon: '部首',
-          func: () => router.push('radical')
+          func: () => router.push('/radical')
         },
         {
           title: 'Kanji',
-          desc: 'Test your Kanji knowledge here',
+          desc: 'Revise your Kanji knowledge here',
           color: 'kanji',
           icon: '漢字',
-          func: () => router.push('kanji')
+          func: () => router.push('/kanji')
         },
         {
           title: 'Vocabulary',
-          desc: 'Test your vocabulary knowledge here',
+          desc: 'Revise your vocabulary knowledge here',
           color: 'vocab',
           icon: '単語',
-          func: () => router.push('vocab')
+          func: () => router.push('/vocab')
+        },
+        {
+          title: 'Study',
+          desc: 'Test yourself at your own pace',
+          color: 'navy',
+          icon: '勉強',
+          func: () => router.push('/study')
         }
       ]
     };
