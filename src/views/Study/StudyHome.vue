@@ -17,6 +17,9 @@
           <option value="upper">
             Up to Level [{{ levelSelection[1] }}]
           </option>
+          <option value="lower">
+            From Level [{{ levelSelection[1] }}]
+          </option>
           <option value="between">
             Levels [{{ levelSelection[0] }}] -> [{{ levelSelection[1] }}] (
             total:
@@ -90,7 +93,7 @@ import { GetUser } from '@/lib/Local';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  name: 'RTest',
+  name: 'SHome',
   components: { CView, CHeader, CContent, CCard },
   data () {
     const user: Ref<null | WKUser> = ref(null);
@@ -106,17 +109,27 @@ export default defineComponent({
   created () {
     GetUser().then(user => {
       this.user = user;
-      this.user.subscription.max_level_granted = 60;
+      // this.user.subscription.max_level_granted = 60; // for testing purposes
       this.levelSelection[1] = user.level;
     });
   },
   methods: {
     submit () {
+      if(!this.user) return;
       const s = this.settings;
       if (!(s[0] || s[1] || s[2])) return;
       if (!(s[1] || s[2])) s[3] = false;
+      switch(this.levelSelectionType){
+        case 'single': this.levelSelection[0] = this.levelSelection[1]; break;
+        case 'upper': this.levelSelection[0] = 1; break;
+        case 'lower': this.levelSelection = [this.levelSelection[1], this.user.subscription.max_level_granted]; break;
+        default: break;
+      }
       this.router.push(
-        '/study/' + [...s.entries()].filter(i => i[1]).map(i => i[0])
+        '/study/' +
+          this.levelSelection +
+          ',' +
+          [...s.entries()].filter(i => i[1]).map(i => i[0])
       );
     }
   }
