@@ -1,13 +1,13 @@
 <template>
   <c-view>
     <c-header icon=":arrow-back" @iconClick="() => router.back()">
-      Radical Test
+      Study
     </c-header>
     <c-content>
       <c-card class="settings-card">
         <template #head>
           <div class="card-head">
-            Quiz Setup
+            Study Setup
           </div>
         </template>
         <select v-model="levelSelectionType" class="dropdown-a">
