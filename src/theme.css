@@ -46,7 +46,7 @@
 
   user-select: none;
 
-  font-size: 2.5vh;
+  font-size: 2.5vmax;
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -84,9 +84,5 @@
     width: 100vh;
     height: 100vw;
     transform: translate(-50vh, -50vw) rotate(-90deg) translate(-50vh, 50vw);
-  }
-
-  :root {
-    font-size: 2.5vw;
   }
 }
