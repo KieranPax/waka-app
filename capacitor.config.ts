@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.waka.app',
-  appName: '\x17\x17WaKa',
+  appName: 'WaKa',
   webDir: 'dist',
   bundledWebRuntime: false
 };
