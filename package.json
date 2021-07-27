@@ -7,6 +7,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@capacitor/android": "^3.1.2",
+    "@capacitor/cli": "^3.1.2",
+    "@capacitor/core": "^3.1.2",
     "@types/wanakana": "^4.0.3",
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
