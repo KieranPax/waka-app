@@ -36,7 +36,7 @@ function SimplifyRadical (item: WKFetchItem<WKRadical>) {
   const o = {
     id: item.id,
     type: item.object.charAt(0),
-    name: item.data.slug,
+    name: item.data.meanings.find(i=>i.primary)?.meaning,
     char:
       item.data.characters ||
       '@' +

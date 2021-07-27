@@ -113,6 +113,17 @@ export async function GetLevelComp (levelId: number) {
   return JSON.parse(await inflate(clevel));
 }
 
+export async function GetLevelComps (levelIds: number[]) {
+  if (!MemCache.levelComp) {
+    MemCache.levelComp = new Map(
+      JSON.parse(localStorage.getItem('level_comp') as string)
+    );
+  }
+  const pp: Promise<any>[] = [];
+  for (const i of levelIds) pp.push(GetLevelComp(i));
+  return Promise.all(pp);
+}
+
 export async function GetSubjectMin () {
   if (!MemCache.subjectMin) {
     MemCache.subjectMin = JSON.parse(

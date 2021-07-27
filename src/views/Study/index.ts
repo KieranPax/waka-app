@@ -1,2 +1,3 @@
 import StudyHome from './StudyHome.vue';
-export { StudyHome };
+import StudyMode from './StudyMode.vue';
+export { StudyHome, StudyMode };
