@@ -12,7 +12,7 @@ export default defineComponent({
       this.card.body(c, () => {
         this.$forceUpdate();
         if (!c.answered) return;
-        setTimeout(this.$emit, 800, 'answered', c.answered[1]);
+        setTimeout(this.$emit, c.answered[1]?200:1200, 'answered', c.answered[1]);
       })
     ]);
   }
