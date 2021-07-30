@@ -5,6 +5,12 @@ import VImage from '@/components/Vocab/Image.vue';
 import { SKanji, SRadical, SSubject } from './AltTypes';
 import { GetLevelComps, GetSubjects } from './Local';
 
+const hiriganaChar = (
+  'あいうえおかがきぎくぐけげこごさざしじすずせぜそぞ' +
+  'ただちぢつづてでとどなにぬねのはばぱひびぴふぶぷへ' +
+  'べぺほぼぽまみむめもやゆよらりるれろわを'
+).split('');
+
 export interface QuestionInfo {
   i: number;
   pos: number;
@@ -95,6 +101,128 @@ const BodyGenerators = new (class BodyGen {
         [h(RImage, { radical: i })]
       ]);
   }
+
+  MultiKanjiName (selection: SKanji[]) {
+    return (q: QuestionInfo, f: () => void) =>
+      this.MultiSelect(selection, (i, index) => [
+        {
+          onClick (e: Event) {
+            e.stopPropagation();
+            if (q.answered) return;
+            q.answered = [index + 1, q.focus.id === i.id];
+            f();
+          },
+          style: {
+            background: q.answered
+              ? [
+                '',
+                'var(--c-color-bad)',
+                'var(--c-color-good)',
+                'var(--c-color-good)'
+              ][
+                (i.id === q.focus.id ? 2 : 0) +
+                    (index + 1 === q.answered[0] ? 1 : 0)
+              ]
+              : ''
+          }
+        },
+        [i.meanings.find(i => i.a === 3)?.t as string]
+      ]);
+  }
+
+  MultiKanjiChar (selection: SKanji[]) {
+    return (q: QuestionInfo, f: () => void) =>
+      this.MultiSelect(selection, (i, index) => [
+        {
+          onClick (e: Event) {
+            e.stopPropagation();
+            if (q.answered) return;
+            q.answered = [index + 1, q.focus.id === i.id];
+            f();
+          },
+          style: {
+            background: q.answered
+              ? [
+                '',
+                'var(--c-color-bad)',
+                'var(--c-color-good)',
+                'var(--c-color-good)'
+              ][
+                (i.id === q.focus.id ? 2 : 0) +
+                    (index + 1 === q.answered[0] ? 1 : 0)
+              ]
+              : ''
+          }
+        },
+        [h(KImage, { kanji: i })]
+      ]);
+  }
+
+  MultiKanjiReading (selection: SKanji[]) {
+    return (q: QuestionInfo, f: () => void) =>
+      this.MultiSelect(selection, (i, index) => [
+        {
+          onClick (e: Event) {
+            e.stopPropagation();
+            if (q.answered) return;
+            q.answered = [index + 1, q.focus.id === i.id];
+            f();
+          },
+          style: {
+            background: q.answered
+              ? [
+                '',
+                'var(--c-color-bad)',
+                'var(--c-color-good)',
+                'var(--c-color-good)'
+              ][
+                (i.id === q.focus.id ? 2 : 0) +
+                    (index + 1 === q.answered[0] ? 1 : 0)
+              ]
+              : ''
+          }
+        },
+        [
+          h('span', { lang: 'ja' }, [
+            i.readings.find(i => i.a === 2)?.r as string
+          ])
+        ]
+      ]);
+  }
+
+  MultiKanjiReadingTypo (focus: SKanji) {
+    const s = focus.readings.find(i => i.a === 2)?.r as string;
+    const selection: string[] = [s];
+    const j = Math.random() * s.length;
+    for (let i = 0; i < 3; i++) {
+      selection.push(
+        s.substring(0, j) + RandSelect(hiriganaChar) + s.substring(j + 1)
+      );
+    }
+    RandShuffle(selection);
+    return (q: QuestionInfo, f: () => void) =>
+      this.MultiSelect(selection, (i, index) => [
+        {
+          onClick (e: Event) {
+            e.stopPropagation();
+            if (q.answered) return;
+            q.answered = [index + 1, i === s];
+            f();
+          },
+          style: {
+            background: q.answered
+              ? [
+                '',
+                'var(--c-color-bad)',
+                'var(--c-color-good)',
+                'var(--c-color-good)'
+              ][(i === s ? 2 : 0) + (index + 1 === q.answered[0] ? 1 : 0)]
+              : ''
+          }
+        },
+        [h('span', { lang: 'ja' }, [i])]
+      ]);
+  }
 })();
 
 export class QuestionGenerator {
@@ -160,9 +288,7 @@ export class QuestionGenerator {
       case 'radical':
         return this.GenerateRadical(i);
       case 'kanji':
-        {
-        }
-        break;
+        return this.GenerateKanji(i, qType || '');
       case 'vocab':
         {
         }
@@ -208,29 +334,49 @@ export class QuestionGenerator {
     }
   }
 
-  CreateMultiSelect<T> (
-    data: T[],
-    comp: (i: T) => VNode | string,
-    verify: (i: T) => boolean
-  ) {
-    const l = [];
-    RandShuffle(data);
-    let result = 0;
-    for (let i = 0; i < data.length; i++) {
-      l.push(
-        h(
-          'button',
-          {
-            result,
-            onClick () {
-              if (result) return;
-              result = verify(data[i]) ? 2 : 1;
-            }
-          },
-          [comp(data[i])]
-        )
-      );
+  GenerateKanji (i: number, qType: string): QuestionInfo {
+    const ansType = qType === 'reading' ? RandRange(2, 5) : RandRange(0, 2);
+    const focus = this.pickSubject(1) as SKanji;
+    const base = { answered: null, i, pos: 0, type: 'kanji', focus };
+    switch (ansType as number) {
+      case 0:
+        return {
+          ...base,
+          title: h(KImage, { kanji: focus }),
+          body: BodyGenerators.MultiKanjiName(
+            this.pickSubjects(1, 3, focus) as SKanji[]
+          )
+        };
+      case 1:
+        return {
+          ...base,
+          title: h('span', [focus.meanings.find(i => i.a === 3)?.t]),
+          body: BodyGenerators.MultiKanjiChar(
+            this.pickSubjects(1, 3, focus) as SKanji[]
+          )
+        };
+      case 2:
+        return {
+          ...base,
+          title: h(KImage, { kanji: focus }),
+          body: BodyGenerators.MultiKanjiReading(
+            this.pickSubjects(1, 3, focus) as SKanji[]
+          )
+        };
+      case 3:
+        return {
+          ...base,
+          title: h(KImage, { kanji: focus }),
+          body: BodyGenerators.MultiKanjiReadingTypo(focus)
+        };
+      case 4:
+        return {
+          ...base,
+          title: h('span', [focus.meanings.find(i => i.a === 3)?.t]),
+          body: BodyGenerators.MultiKanjiReadingTypo(focus)
+        };
+      default:
+        throw '';
     }
-    return h('div', { class: 'multi-select' }, l);
   }
 }

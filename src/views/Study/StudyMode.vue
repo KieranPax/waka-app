@@ -67,10 +67,8 @@ export default defineComponent({
     });
     this.generator.Generate().then(c => {
       c ? this.cards.push(c) : 0;
-      setTimeout(this.scrollQuestions, 0);
+      setTimeout(this.scrollQuestions, 1);
     });
-    console.log(this.cards[0]);
-    // for (let i = 0; i < 5; i++) { this.generator.Generate().then(c => console.log(c)) }
   },
   methods: {
     scrollQuestions () {
@@ -98,7 +96,7 @@ export default defineComponent({
 .q-card {
   width: 100%;
   position: absolute;
-  transition: left 1.5s;
+  transition: left 1.2s;
 }
 
 .q-head {
@@ -118,11 +116,13 @@ q-title {
   width: 100%;
 }
 
-q-title:deep(r-image, k-image) {
+q-title:deep(r-image),
+q-title:deep(k-image) {
   font-size: 4em;
 }
 
-q-body:deep(r-image, k-image) {
+q-body:deep(r-image),
+q-body:deep(k-image) {
   font-size: 2.5em;
 }
 
