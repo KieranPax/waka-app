@@ -1,7 +1,11 @@
 <template>
   <table class="c-card-grid">
     <tr v-for="rrow in grid" :key="rrow.i">
-      <td v-for="card in rrow.row" :key="card.title">
+      <td
+        v-for="card in rrow.row"
+        :key="card.title"
+        :style="{ padding: width > 1 ? '0.5rem' : '' }"
+      >
         <c-card @click="card.func">
           <template #head>
             <div
