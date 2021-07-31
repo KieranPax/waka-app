@@ -8,30 +8,13 @@
       }}</span>
     </c-header>
     <c-content>
-      <c-card v-if="user && user.current_vacation_started_at" class="mode-card">
+      <c-card v-if="user && user.current_vacation_started_at" class="menu-card">
         <span
           class="card-desc"
         >Looks you're on vacation right now. Click here if you would like to
           update that.</span>
       </c-card>
-      <c-card
-        v-for="card in cards"
-        :key="card.title"
-        class="mode-card"
-        @click="card.func"
-      >
-        <template #head>
-          <div
-            class="mode-head"
-            lang="ja"
-            :style="{ background: 'var(--c-color-' + card.color + ')' }"
-          >
-            {{ card.icon }}
-          </div>
-        </template>
-        <span class="card-title">{{ card.title }}</span><br>
-        <span class="card-desc">{{ card.desc }}</span>
-      </c-card>
+      <c-card-grid :cards="cards"/>
     </c-content>
     <div
       class="screen-cover"
@@ -48,14 +31,14 @@
 <script lang="ts">
 import { defineComponent, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { CView, CHeader, CContent, CCard } from '@/components';
+import { CView, CHeader, CContent, CCard, CCardGrid } from '@/components';
 import HomeWelcomeScreen from '@/components/Misc/HomeWelcomeScreen.vue';
 import { GetUser } from '@/lib/Local';
 import { WKUser } from '@/lib/WKAPI';
 
 export default defineComponent({
   name: 'Home',
-  components: { CView, CHeader, CContent, CCard, HomeWelcomeScreen },
+  components: { CView, CHeader, CContent, CCard, CCardGrid, HomeWelcomeScreen },
   data () {
     const router = useRouter();
     const user: Ref<null | WKUser> = ref(null);
@@ -111,9 +94,19 @@ export default defineComponent({
             this.user = res;
             if (s) {
               const u = JSON.parse(s).user as WKUser;
-              if(this.user.level !== u.level) alert('level up / down');
-              if(this.user.current_vacation_started_at !== u.current_vacation_started_at) alert('vacation update');
-              if(this.user.subscription.period_ends_at !== u.subscription.period_ends_at) alert('subscription update');
+              if (this.user.level !== u.level) alert('level up / down');
+              if (
+                this.user.current_vacation_started_at !==
+                u.current_vacation_started_at
+              ) {
+                alert('vacation update');
+              }
+              if (
+                this.user.subscription.period_ends_at !==
+                u.subscription.period_ends_at
+              ) {
+                alert('subscription update');
+              }
             }
             console.log(res);
           })
@@ -130,24 +123,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.mode-card {
+.menu-card {
   margin-bottom: 1rem;
-}
-
-.mode-head {
-  padding: 20px;
-  text-align: center;
-  font-size: 4em;
-}
-
-.card-title {
-  font-size: 1.2em;
-  line-height: 2em;
-}
-
-.card-desc {
-  font-size: 0.8em;
-  color: var(--c-text-fade-color);
 }
 
 .sub-header {
